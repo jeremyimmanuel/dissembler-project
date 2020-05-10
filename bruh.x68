@@ -92,7 +92,7 @@ LF              EQU         $0A
 newLine         DC.B        CR,LF,0
 
 
-    DS.W bruh 0 ;force even-word alignment
+    DS.W 0 ;force even-word alignment
 
     END START
 
