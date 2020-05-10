@@ -48,6 +48,7 @@ saveEndAddr     MOVE.B  #4, D0
 printStartAddr  MOVE.L startAddr, D1
                 MOVE.B #3, D0
                 TRAP #15
+                JSR STRING_TO_HEX
 
                 LEA         NEWLINE, A1
                 MOVE.B      #14, D0
@@ -73,16 +74,13 @@ GET_TWO_BITS    MOVE.B  (A5)+, D1
                 * else:
                 *   branch GET_NEXT_GET_TWO_BITS
 
-GET_NEXT_GET_TWO_BITS   MOVE.B (A5)+ D2
+GET_NEXT_GET_TWO_BITS   MOVE.B (A5)+, D2
                         * check if first4 is equal to ADD 
                         * branch to add
                         BRA GET_NEXT_GET_TWO_BITS
 
-ADD_OPCODE
-
-
                 
-    INLCUDE 'test.x68'
+    INCLUDE 'test.x68'
     INCLUDE 'string2hex.x68'
 
 
@@ -94,7 +92,7 @@ LF              EQU         $0A
 newLine         DC.B        CR,LF,0
 
 
-DS.W 0 ;force even-word alignment
+    DS.W bruh 0 ;force even-word alignment
 
     END START
 

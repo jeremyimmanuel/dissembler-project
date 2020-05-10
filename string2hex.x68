@@ -20,7 +20,7 @@ CONVERSION_LOOP
     BGT ERROR
     CMP #'A',D2 ;uppercase hex
     BGE ALPHA_UPPER
-    CMP #9,D2 ;some characters in between (9,A)
+    CMP #'9',D2 ;some characters in between (9,A)
     BGT ERROR
     CMP #'0',D2 ;numeric hex
     BGE NUMERIC
@@ -38,8 +38,8 @@ NUMERIC
 MOVE_TO_REG
     MOVE.L #4,D3
     MULU #8,D3
-    LSR D3,D2
-    OR D2,D1
+    LSL D3,D2
+    OR D2,D0
 
     SUB.B #1,D1
     BRA CONVERSION_LOOP
