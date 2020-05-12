@@ -16,6 +16,15 @@ bcc_first4      EQU %0110
 jsr_first4      EQU %0100
 rts_first4      EQU %0100
 
+* for mode and reg\
+zero            EQU $0000
+one             EQU $0001
+two             EQU $0010
+three           EQU $0011
+four            EQU $0100
+five            EQU $0101
+six             EQU $0110
+seven           EQU $0111
 
 * 1.I/O person prompts user (me) for 
 * a starting and 
