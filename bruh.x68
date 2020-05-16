@@ -55,18 +55,57 @@ saveEndAddr     MOVE.B  #4, D0
                 RTS
 
 printStartAddr  MOVE.L startAddr, D1
-                MOVE.B #3, D0
-                TRAP #15
-                JSR STRING_TO_HEX
+                MOVE.B #4, D5
+                JSR PRINTHEX
 
                 LEA         NEWLINE, A1
                 MOVE.B      #14, D0
                 TRAP        #15
 
 printEndAddr    MOVE.L endAddr, D1
-                MOVE.B #2, D0
-                ;JSR PRINTHEX
-                JSR STRING_TO_HEX
+                MOVE.B #4, D5
+                JSR PRINTHEX
+                
+
+PRINTHEX    CMP.B #0, D5
+            BEQ ESCAPEFROMPRINTHEX
+            MOVE.B (A1),D3
+            MOVE.B (A1)+,D4
+            
+            LSR.B #4, D3
+            LSL.B #4, D4
+            LSR.B #4, D4
+            
+            CLR D6
+            MOVE.B D3,D1
+            CMP.B #10,D3
+            BLT PRINTNUM
+            BRA PRINTLET
+
+
+PRINTNUM    ADD.B #$30, D1
+            MOVE.B #6, D0
+            TRAP #15
+            
+            CMP.B #0, D6
+            BEQ SWAP
+            
+            SUB.B #1, D5
+            BRA PRINTHEX
+
+PRINTLET    SUB.B #9, D1
+            ADD.B #$40, D1
+            MOVE.B #6, D0
+            TRAP #15
+            
+            CMP.B #0, D6
+            BEQ SWAP
+            
+            SUB.B #1, D5
+            BRA PRINTHEX
+
+SWAP        MOVE.B #1, D6
+            BRA PRINTSEC
 
 ; OPCODE STUFFF
 
