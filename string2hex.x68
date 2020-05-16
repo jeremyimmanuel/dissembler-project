@@ -8,9 +8,10 @@ STRING_TO_HEX:
     CLR.L D2 ; temp storage
 
 CONVERSION_LOOP
-    CMP #0,D1
+    CMP #0,D1           ; if counter hits 0 then stop
     BEQ EXIT_LOOP
     MOVE.L (A1)+, D2 ; move to register to save time
+    * because this moves the whole thing not one by one
 
     CMP #'f',D2 ;lowercase base-36
     BGT ERROR

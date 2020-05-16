@@ -87,7 +87,7 @@ PRINTSEC    MOVE.B D4,D1
             BLT PRINTNUM
             BRA PRINTLET
 
-ESCAPEFROMTHEBRANCH     RTS                 * Control flow away from CONVERT subroutines.            
+ESCAPEFROMPRINTHEX     RTS                 * Control flow away from CONVERT subroutines.            
 
 PRINTNUM    ADD.B #$30, D1
             MOVE.B #6, D0

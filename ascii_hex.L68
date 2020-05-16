@@ -1,0 +1,102 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 5/15/2020 8:37:58 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      : Input Branch
+00000000                             3  * Written by : Jeremy Tandjung
+00000000                             4  * Date       : 04/09/2020
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00000000                             7  
+00000000                             8  ; MOVEA.L D1, A0
+00000000                             9  
+00000000                            10  
+00000000  =0000000D                 11  CR EQU $0D
+00000000  =0000000A                 12  LF EQU $0A
+00001000                            13      ORG $1000
+00001000                            14  START:
+00001000                            15      
+00001000                            16  START_ADDR_PROMPT   ; Prompt user for starting address
+00001000  43F9 00001066             17      LEA     instructions, A1
+00001006  103C 000E                 18      MOVE.B  #14, D0     ; Trap task #14
+0000100A  4E4F                      19      TRAP    #15
+0000100C  227C 00000000             20      MOVEA.L #0, A1      ; Clear A1
+00001012                            21      
+00001012  103C 0002                 22      MOVE.B  #2, D0      ; Trap task #2 
+00001016  4E4F                      23      TRAP    #15         ; Stores string from keyboard to (A1)
+00001018                            24  
+00001018  7208                      25      MOVE.L #8, D1       ; init counter
+0000101A  4282                      26      CLR.L D2
+0000101C                            27  
+0000101C  2419                      28      MOVE.L (A1)+, D2    ; move to register to save time
+0000101E                            29      
+0000101E                            30  ; HEX 0 - F
+0000101E                            31  ASCII_2_HEX
+0000101E  B27C 0000                 32      CMP #0, D1              ; check for counter if 0 stop
+00001022  6700 003A                 33      BEQ EXIT_ASCII_2_HEX
+00001026                            34            
+00001026                            35  
+00001026                            36      * 41 30 30 30
+00001026                            37      * Range check for numerical
+00001026                            38  NUMBER_CHECK    
+00001026  B43C 0030                 39      CMP.B #'0', D2          ; if less than 0, error
+0000102A  6D00 0034                 40      BLT ERROR
+0000102E  B43C 0039                 41      CMP.B #'9', D2          ; if greater than 9, error
+00001032  6E00 000E                 42      BGT LETTER_CHECK
+00001036                            43  
+00001036                            44      
+00001036  0402 0030                 45      SUB.B   #'0', D2          ; converting to hex
+0000103A  D682                      46      ADD.L   D2, D3              ; 0000 0008
+0000103C  E98B                      47      LSL.L   #4, D3              ; Shifting -> 0000 0080
+0000103E  5341                      48      SUBI    #1, D1              ; count--
+00001040  60DC                      49      BRA ASCII_2_HEX
+00001042                            50  
+00001042                            51      * Range check for A-F
+00001042                            52  LETTER_CHECK    
+00001042  B43C 0041                 53      CMP.B #'A', D2          ; if less than A, error
+00001046  6D00 0018                 54      BLT ERROR
+0000104A  B43C 0046                 55      CMP.B #'F', D2          ; if greater than F, error
+0000104E  6E00 0010                 56      BGT ERROR
+00001052                            57  
+00001052  0402 0037                 58      SUB.B #'7', D2          ; if got here then valid letter
+00001056  D682                      59      ADD.L D2, D3
+00001058  E98B                      60      LSL.L #4, D3            ; shift again
+0000105A  5341                      61      SUBI    #1, D1              ; count--   
+0000105C                            62  
+0000105C  60C0                      63      BRA ASCII_2_HEX
+0000105E                            64  
+0000105E                            65      * convert
+0000105E                            66      
+0000105E                            67  
+0000105E                            68  
+0000105E                            69  EXIT_ASCII_2_HEX
+0000105E  4E75                      70      RTS
+00001060                            71  
+00001060                            72  ERROR
+00001060  4280                      73      CLR.L D0
+00001062  3E3C FFFF                 74      MOVE #$FFFFFFFF, D7
+00001066                            75  
+00001066= 48 65 6C 6C 6F 20 ...     76  instructions    DC.B 'Hello Professor', CR, LF
+00001077= 45 6E 74 65 72 20 ...     77                  DC.B 'Enter starting address', CR, LF, 0
+00001090                            78  
+00001090                            79  
+00001090                            80      END START
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ASCII_2_HEX         101E
+CR                  D
+ERROR               1060
+EXIT_ASCII_2_HEX    105E
+INSTRUCTIONS        1066
+LETTER_CHECK        1042
+LF                  A
+NUMBER_CHECK        1026
+START               1000
+START_ADDR_PROMPT   1000
