@@ -82,6 +82,12 @@ PRINTHEX    CMP.B #0, D5
             BLT PRINTNUM
             BRA PRINTLET
 
+PRINTSEC    MOVE.B D4,D1
+            CMP.B #10,D4
+            BLT PRINTNUM
+            BRA PRINTLET
+
+ESCAPEFROMTHEBRANCH     RTS                 * Control flow away from CONVERT subroutines.            
 
 PRINTNUM    ADD.B #$30, D1
             MOVE.B #6, D0
@@ -106,6 +112,8 @@ PRINTLET    SUB.B #9, D1
 
 SWAP        MOVE.B #1, D6
             BRA PRINTSEC
+
+    
 
 ; OPCODE STUFFF
 
