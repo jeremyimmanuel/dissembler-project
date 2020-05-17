@@ -1,0 +1,158 @@
+00000400 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 5/16/2020 6:27:21 PM
+
+00000400                             1      ORG $400
+00000400                             2  
+00000400                             3  START:
+00000400                             4      INCLUDE 'get_input.x68'
+00000400                             5      ORG $400
+00000400                             6  
+00000400                             7  START_ADDR_PROMPT       ; Prompt user for starting address
+00000400  4280                       8      CLR.L D0            ; Clear D0, for trap task num
+00000402  4281                       9      CLR.L D1            ; Clear D1, for string length
+00000404  4282                      10      CLR.L D2            ; Clear D2, for reading each bytes
+00000406  4283                      11      CLR.L D3            ; Clear D3, for holding the address
+00000408                            12      
+00000408  43F9 0000045C             13      LEA     start_addr_instruction, A1  ; Display promp for starting address
+0000040E  103C 000E                 14      MOVE.B  #14, D0     ; Trap task #14
+00000412  4E4F                      15      TRAP    #15
+00000414                            16  
+00000414  227C 00000000             17      MOVEA.L #0, A1      ; Clear A1, so that trap task #2 stores it here
+0000041A                            18                          ; which is $0000 0000 by default
+0000041A                            19      
+0000041A  103C 0002                 20      MOVE.B  #2, D0      ; Trap task #2 
+0000041E  4E4F                      21      TRAP    #15         ; Stores string from keyboard to (A1)
+00000420                            22                          ; it will also store the bit count in D1
+00000420                            23  
+00000420  4EB9 000004E4             24      JSR ASCII_2_HEX
+00000426  4EB9 0000052A             25      JSR MOVE_START_ADDR_REGISTER
+0000042C                            26  
+0000042C                            27  END_ADDR_PROMPT
+0000042C  4280                      28      CLR.L D0            ; Clear D0, for trap task num
+0000042E  4281                      29      CLR.L D1            ; Clear D1, for string length
+00000430  4282                      30      CLR.L D2            ; Clear D2, for reading each bytes
+00000432  4283                      31      CLR.L D3            ; Clear D3, for holding the address
+00000434                            32      
+00000434  43F9 000004A1             33      LEA     end_addr_instruction, A1  ; Display promp for starting address
+0000043A  103C 000E                 34      MOVE.B  #14, D0     ; Trap task #14
+0000043E  4E4F                      35      TRAP    #15
+00000440                            36  
+00000440  227C 00000000             37      MOVEA.L #0, A1      ; Clear A1, so that trap task #2 stores it here
+00000446                            38                          ; which is $0000 0000 by default
+00000446                            39      
+00000446  103C 0002                 40      MOVE.B  #2, D0      ; Trap task #2 
+0000044A  4E4F                      41      TRAP    #15         ; Stores string from keyboard to (A1)
+0000044C                            42                          ; it will also store the bit count in D1
+0000044C                            43  
+0000044C  4EB9 000004E4             44      JSR ASCII_2_HEX
+00000452  4EB9 0000052E             45      JSR MOVE_END_ADDR_REGISTER
+00000458                            46  
+00000458  6000 00EA                 47      BRA DONE
+0000045C                            48  
+0000045C= 45 6E 74 65 72 20 ...     49  start_addr_instruction     DC.B 'Enter starting address (in hex, Capital letters and numbers only):', CR, LF, 0
+000004A1= 45 6E 74 65 72 20 ...     50  end_addr_instruction       DC.B 'Enter ending address (in hex, Capital letters and numbers only):', CR, LF, 0
+000004A1= 45 6E 74 65 72 20 ...     51  -------------------- end include --------------------
+000004E4                            52      INCLUDE 'ascii_hex.x68'
+000004E4                            53  
+000004E4                            54  ; MOVEA.L D1, A0
+000004E4                            55  
+000004E4                            56  
+000004E4                            57  
+000004E4  =0000000D                 58  CR EQU $0D
+000004E4  =0000000A                 59  LF EQU $0A
+000004E4                            60      
+000004E4                            61  ASCII_2_HEX
+000004E4  B27C 0000                 62      CMP #0, D1              ; check for counter if 0 stop
+000004E8  6700 003E                 63      BEQ EXIT_ASCII_2_HEX    ; when done, exit
+000004EC  E98B                      64      LSL.L   #4, D3          ; Shifting one hexabit at holder
+000004EE  1419                      65      MOVE.B (A1)+, D2        ; move to register to save time
+000004F0                            66            
+000004F0                            67  
+000004F0                            68  NUMBER_CHECK    
+000004F0  B43C 0030                 69      CMP.B   #'0', D2          ; if less than 0, error
+000004F4  6D00 003C                 70      BLT     ERROR
+000004F8  B43C 0039                 71      CMP.B   #'9', D2          ; if greater than 9, maybe letter
+000004FC  6E00 000E                 72      BGT     LETTER_CHECK      ; branch to LETTER_CHECK
+00000500                            73  
+00000500                            74      
+00000500  0402 0030                 75      SUB.B   #'0', D2          ; converting to hex
+00000504  D602                      76      ADD.B   D2, D3            ; Add byte D2, to D3
+00000506                            77      
+00000506  E08A                      78      LSR.L   #8, D2            ; right shift D2 by two hexabits, 
+00000508                            79                                ; to get rid of the prev hexabits
+00000508                            80  
+00000508  5341                      81      SUBI    #1, D1            ; count--
+0000050A  60D8                      82      BRA     ASCII_2_HEX       ; loop
+0000050C                            83  
+0000050C                            84      * Range check for A-F
+0000050C                            85  LETTER_CHECK    
+0000050C  B43C 0041                 86      CMP.B   #'A', D2          ; if less than A, error
+00000510  6D00 0020                 87      BLT     ERROR
+00000514  B43C 0046                 88      CMP.B   #'F', D2          ; if greater than F, error
+00000518  6E00 0018                 89      BGT     ERROR
+0000051C                            90  
+0000051C  0402 0037                 91      SUB.B   #'7', D2          ; if got here then valid letter
+00000520  D602                      92      ADD.B   D2, D3            ; Add byte from D2 to D3
+00000522                            93      
+00000522  E08A                      94      LSR.L   #8, D2            ; right shift D2 by two hexabits, 
+00000524                            95                                ; to get rid of the prev hexabits
+00000524                            96      
+00000524  5341                      97      SUBI    #1, D1            ; count--   
+00000526  60BC                      98      BRA ASCII_2_HEX           ; loop
+00000528                            99      
+00000528                           100  EXIT_ASCII_2_HEX
+00000528  4E75                     101      RTS
+0000052A                           102  
+0000052A                           103  MOVE_START_ADDR_REGISTER
+0000052A  2443                     104      MOVEA.L D3, A2
+0000052C  4E75                     105      RTS
+0000052E                           106  
+0000052E                           107  MOVE_END_ADDR_REGISTER
+0000052E  2643                     108      MOVEA.L D3, A3
+00000530  4E75                     109      RTS
+00000532                           110  
+00000532                           111  ERROR
+00000532  4280                     112      CLR.L D0
+00000534  3E3C FFFF                113      MOVE #$FFFFFFFF, D7
+00000538  43F9 00000546            114      LEA error_message, A1   ; Display error message
+0000053E  103C 000E                115      MOVE.B  #14, D0         ; Trap task #14
+00000542  4E4F                     116      TRAP    #15
+00000544                           117  
+00000544                           118  DONE
+00000544  4280                     119      CLR.L D0
+00000546                           120  
+00000546= 49 6E 76 61 6C 69 ...    121  error_message               DC.B 'Invalid Address exception, input was was not valid hex value', CR, LF, 0
+00000585                           122  
+00000586                           123  START_ADDRESS DS.L 1
+0000058A                           124  END_ADDR      DS.L 1
+0000058E                           125  
+0000058E                           126  
+0000058E                           127      END START
+0000058E                           128  -------------------- end include --------------------
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ASCII_2_HEX         4E4
+CR                  D
+DONE                544
+END_ADDR            58A
+END_ADDR_INSTRUCTION  4A1
+END_ADDR_PROMPT     42C
+ERROR               532
+ERROR_MESSAGE       546
+EXIT_ASCII_2_HEX    528
+LETTER_CHECK        50C
+LF                  A
+MOVE_END_ADDR_REGISTER  52E
+MOVE_START_ADDR_REGISTER  52A
+NUMBER_CHECK        4F0
+START               400
+START_ADDRESS       586
+START_ADDR_INSTRUCTION  45C
+START_ADDR_PROMPT   400
