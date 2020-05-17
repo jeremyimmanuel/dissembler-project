@@ -7,14 +7,26 @@
 
 ; MOVEA.L D1, A0
 
+* Read byte by byte in (A1)
+* Check if number
+* Check if letter
+* If valid, move to D3 
+* When done, move D3 to A2
+*
+
 
 CR EQU $0D
 LF EQU $0A
     ORG $1000
 START:
     
-START_ADDR_PROMPT   ; Prompt user for starting address
-    LEA     instructions, A1
+START_ADDR_PROMPT       ; Prompt user for starting address
+    CLR.L D0
+    CLR.L D1
+    CLR.L D2            ; Clear D2
+    CLR.L D3
+    
+    LEA     start_addr_instruction, A1
     MOVE.B  #14, D0     ; Trap task #14
     TRAP    #15
     MOVEA.L #0, A1      ; Clear A1
@@ -23,10 +35,29 @@ START_ADDR_PROMPT   ; Prompt user for starting address
     TRAP    #15         ; Stores string from keyboard to (A1)
                         ; it will also store the bit count in D1
 
-    
-    CLR.L D2
+    JSR ASCII_2_HEX
+    JSR MOVE_START_ADDR_REGISTER
 
+END_ADDR_PROMPT
+    CLR.L D0
+    CLR.L D1
+    CLR.L D2            ; Clear D2
+    CLR.L D3
     
+    LEA     end_addr_instruction, A1
+    MOVE.B  #14, D0     ; Trap task #14
+    TRAP    #15
+    MOVEA.L #0, A1      ; Clear A1
+    
+    MOVE.B  #2, D0      ; Trap task #2 
+    TRAP    #15         ; Stores string from keyboard to (A1)
+                        ; it will also store the bit count in D1
+    
+    JSR ASCII_2_HEX
+    JSR MOVE_END_ADDR_REGISTER
+
+    BRA DONE
+
     
 ; HEX 0 - F
 ASCII_2_HEX
@@ -67,21 +98,31 @@ LETTER_CHECK
 
     BRA ASCII_2_HEX
     
-    
-
-    * convert
-    
 
 
 EXIT_ASCII_2_HEX
+    RTS
+
+MOVE_START_ADDR_REGISTER
+    MOVEA.L D3, A2
+    RTS
+
+MOVE_END_ADDR_REGISTER
+    MOVEA.L D3, A3
     RTS
 
 ERROR
     CLR.L D0
     MOVE #$FFFFFFFF, D7
 
-instructions    DC.B 'Hello Professor', CR, LF
-                DC.B 'Enter starting address', CR, LF, 0
+DONE
+    CLR.L D0
+
+start_addr_instruction     DC.B 'Enter starting address (in hex):', CR, LF, 0
+end_addr_instruction       DC.B 'Enter ending address (in hex):', CR, LF, 0
+
+START_ADDRESS DS.L 1
+END_ADDR      DS.L 1
 
 
     END START
