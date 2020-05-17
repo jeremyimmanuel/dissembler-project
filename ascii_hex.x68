@@ -1,7 +1,7 @@
 *-----------------------------------------------------------
 * Title      : Converting the user input string to hex 
 * Written by : Jeremy Tandjung, Angie Tserenjav, Jun Zhen
-* Date       : 04/09/2020
+* Date       : 05/16/2020
 * Description:
 *-----------------------------------------------------------
 
@@ -124,8 +124,8 @@ ERROR
 DONE
     CLR.L D0
 
-start_addr_instruction     DC.B 'Enter starting address (in hex):', CR, LF, 0
-end_addr_instruction       DC.B 'Enter ending address (in hex):', CR, LF, 0
+start_addr_instruction     DC.B 'Enter starting address (in hex, Capital letters and numbers only):', CR, LF, 0
+end_addr_instruction       DC.B 'Enter ending address (in hex, Capital letters and numbers only):', CR, LF, 0
 error_message               DC.B 'Invalid Address exception, input was was not valid hex value', CR, LF, 0
 
 START_ADDRESS DS.L 1
