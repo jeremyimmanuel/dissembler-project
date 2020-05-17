@@ -117,8 +117,8 @@ MOVE_END_ADDR_REGISTER
 ERROR
     CLR.L D0
     MOVE #$FFFFFFFF, D7
-    LEA error_message, A1
-    MOVE.B  #14, D0     ; Trap task #14
+    LEA error_message, A1   ; Display error message
+    MOVE.B  #14, D0         ; Trap task #14
     TRAP    #15
 
 DONE
