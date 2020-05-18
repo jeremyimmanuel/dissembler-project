@@ -12,22 +12,24 @@ STR_BCC     DC.W 'BCC', 0
 STR_BGT     DC.W 'BGT', 0
 STR_BLE     DC.W 'BLE', 0
 
-* Data Registers
-STR_D0      DC.W 'D0', 0
-STR_D1      DC.W 'D1', 0
-STR_D2      DC.W 'D2', 0
-STR_D3      DC.W 'D3', 0
-STR_D4      DC.W 'D4', 0
-STR_D5      DC.W 'D5', 0
-STR_D6      DC.W 'D6', 0
-STR_D7      DC.W 'D7', 0
+* Data size
+STR_BYTE    DC.W '.B', 0
+STR_WORD    DC.W '.W', 0
+STR_LONG    DC.W '.L', 0
+
+* Register numbers
+STR_0      DC.W '0', 0
+STR_1      DC.W '1', 0
+STR_2      DC.W '2', 0
+STR_3      DC.W '3', 0
+STR_4      DC.W '4', 0
+STR_5      DC.W '5', 0
+STR_6      DC.W '6', 0
+STR_7      DC.W '7', 0
 
 * Address Register
-STR_A0      DC.W 'A0', 0
-STR_A1      DC.W 'A1', 0
-STR_A2      DC.W 'A2', 0
-STR_A3      DC.W 'A3', 0
-STR_A4      DC.W 'A4', 0
-STR_A5      DC.W 'A5', 0
-STR_A6      DC.W 'A6', 0
-STR_A7      DC.W 'A7', 0
+STR_A      DC.W 'A', 0
+STR_D      DC.W 'D', 0
+
+* Comma
+STR_COMMA  DC.W ', ', 0
