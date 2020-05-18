@@ -14,13 +14,74 @@ START:
     LSR.W #6, D2 
     MOVE.B D2, D2  
 
-    CMP.B #0, D2
+    CMP.B #0, D2            ; if equal to 0 definatly MOVE/MOVEA
     BEQ MAYBE_MOVE
 
+COMPARE_SOURCE_MODE
+    CMP.B #0, D6
+    BEQ DISP_STR_D
+    CMP.B #1, D6
+    BEQ DISP_STR_A
+    CMP.B #2, D6
+    CMP.B #3, D6
+    CMP.B #4, D6
+    CMP.B #5, D6
+    CMP.B #6, D6
+    CMP.B #7, D6
+    RTS
 
+COMPARE_SOURCE_REGISTER
+    CMP.B #0, D7
+    BEQ DISP_STR_0
+    CMP.B #1, D7
+    BEQ DISP_STR_1
+    CMP.B #2, D7
+    BEQ DISP_STR_2
+    CMP.B #3, D7
+    BEQ DISP_STR_1
+    CMP.B #4, D7
+    BEQ DISP_STR_4
+    CMP.B #5, D7
+    BEQ DISP_STR_5
+    CMP.B #6, D7
+    BEQ DISP_STR_6
+    CMP.B #7, D7
+    BEQ DISP_STR_7
+    RTS
 
-    
-    
+COMPARE_DESTINATION_MODE
+    CMP.B #0, D5
+    BEQ DISP_STR_D
+    CMP.B #1, D5
+    BEQ DISP_STR_A
+    CMP.B #2, D5
+    CMP.B #3, D5
+    CMP.B #4, D5
+    CMP.B #5, D5
+    CMP.B #6, D5
+    CMP.B #7, D5
+    RTS
+
+COMPARE_DESTINATION_REGISTER
+    CMP.B #0, D4
+    BEQ DISP_STR_0
+    CMP.B #1, D4
+    BEQ DISP_STR_1
+    CMP.B #2, D4
+    BEQ DISP_STR_2
+    CMP.B #3, D4
+    BEQ DISP_STR_1
+    CMP.B #4, D4
+    BEQ DISP_STR_4
+    CMP.B #5, D4
+    BEQ DISP_STR_5
+    CMP.B #6, D4
+    BEQ DISP_STR_6
+    CMP.B #7, D4
+    BEQ DISP_STR_7
+    RTS
+
+MAYBE_MOVE
     * get the Size
     * 00 11 111 000 000 110
     * L2
@@ -34,7 +95,6 @@ START:
     LSR.W #6, D3
     MOVE.B D3, D3
 
-    
     * get destination register
     * 00 11 111 000 000 110
     * L4
@@ -47,6 +107,7 @@ START:
     LSR.W #8, D4
     LSR.W #5, D4
     MOVE.B D4, D4
+
 
     * get destination mode
     * 00 11 111 000 000 110
@@ -91,12 +152,32 @@ START:
     MOVE.B D7, D7
 
 
-MAYBE_MOVE
-    LEA STR_MOVE, A1
-    MOVE.B #14, D0
-    TRAP #15
+    CMP.B #1, D5    ; if 1 then MOVEA
+    BEQ MOVEA_SR
+
+    JSR DISP_STR_MOVE
+
+    CMP.B #1, D3        ; Byte
+    BEQ DISP_STR_BYTE
+
+    CMP.B #2, D3        ; Long
+    BEQ DISP_STR_LONG
+    
+    CMP.B #3, D3        ; Word
+    BEQ DISP_STR_WORD
+
+    CMP.B #0, D6
+    BEQ DISP_STR_D
+
+    JSR COMPARE_SOURCE_MODE
+    JSR COMPARE_SOURCE_REGISTER
+
+    JSR COMPARE_DESTINATION_MODE
+    JSR COMPARE_DESTINATION_REGISTER
 
 
     INCLUDE 'constants.x68'
+    INCLUDE 'displays.x68'
 
+MOVEA_SR
     END START
