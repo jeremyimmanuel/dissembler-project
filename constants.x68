@@ -13,9 +13,9 @@ STR_BGT     DC.W 'BGT', 0
 STR_BLE     DC.W 'BLE', 0
 
 * Data size
-STR_BYTE    DC.W '.B', 0
-STR_WORD    DC.W '.W', 0
-STR_LONG    DC.W '.L', 0
+STR_BYTE    DC.W '.B ', 0
+STR_WORD    DC.W '.W ', 0
+STR_LONG    DC.W '.L ', 0
 
 * Register numbers
 STR_0      DC.W '0', 0
