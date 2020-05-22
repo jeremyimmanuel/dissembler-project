@@ -5,6 +5,9 @@ START:
     INCLUDE 'ascii_hex.x68' ; convert user input from ASCII values to hex values
                             ; starting address saved in A2
                             ; ending address saved in A3
+
+    
+    INCLUDE 'constants.x68'
         
 
     END START
