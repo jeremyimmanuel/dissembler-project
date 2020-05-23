@@ -17,7 +17,11 @@ START:
     CMP.B #0, D2            ; if equal to 0 definatly MOVE/MOVEA
     BEQ MAYBE_MOVE
 
+    CMP.B #1, D2
+    BEQ LEA_JSR_RTS_BCC
+
     INCLUDE 'maybe_move.x68'
+    INCLUDE 'lea_jsr_rts_bcc.x68'
     INCLUDE 'constants.x68'
     INCLUDE 'displays.x68'
 
