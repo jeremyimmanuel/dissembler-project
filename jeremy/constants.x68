@@ -33,3 +33,6 @@ STR_D      DC.W 'D', 0
 
 * Comma
 STR_COMMA  DC.W ', ', 0
+
+* Error message
+STR_ERROR   DC.L 'Invalid Opcode', 0

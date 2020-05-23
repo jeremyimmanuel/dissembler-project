@@ -20,10 +20,12 @@ START:
     CMP.B #1, D2            ; if equal to 1 movem, lea, jsr, rts, branches
     * BEQ LEA_JSR_RTS_BCC     ; defined in lea_jsr_rts_bcc.x68
 
-    INCLUDE 'move_movea.x68'
+    INCLUDE 'move_movea/move_movea.x68'
     * INCLUDE 'lea_jsr_rts_bcc.x68'
     INCLUDE 'constants.x68'
     INCLUDE 'displays.x68'
 
+DONE:
+    CLR.L D0
 
     END START
