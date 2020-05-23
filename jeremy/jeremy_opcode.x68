@@ -18,10 +18,10 @@ START:
     BEQ MOVE_MOVEA          ; defined in move_movea.x68
 
     CMP.B #1, D2            ; if equal to 1 movem, lea, jsr, rts, branches
-    BEQ LEA_JSR_RTS_BCC     ; defined in lea_jsr_rts_bcc.x68
+    * BEQ LEA_JSR_RTS_BCC     ; defined in lea_jsr_rts_bcc.x68
 
-    INCLUDE 'maybe_move.x68'
-    INCLUDE 'lea_jsr_rts_bcc.x68'
+    INCLUDE 'move_movea.x68'
+    * INCLUDE 'lea_jsr_rts_bcc.x68'
     INCLUDE 'constants.x68'
     INCLUDE 'displays.x68'
 
