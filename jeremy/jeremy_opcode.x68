@@ -8,17 +8,17 @@ START:
     MOVE.W #$00003E06, D1 * reserve D1 for original input 
     MOVE.W D1, D2
     
-    * get the OP
+    * move first two BITS to D2
     MOVE.W D1, D2
     LSR.W #8, D2
     LSR.W #6, D2 
     MOVE.B D2, D2  
 
     CMP.B #0, D2            ; if equal to 0 definatly MOVE/MOVEA
-    BEQ MAYBE_MOVE
+    BEQ MOVE_MOVEA          ; defined in move_movea.x68
 
-    CMP.B #1, D2
-    BEQ LEA_JSR_RTS_BCC
+    CMP.B #1, D2            ; if equal to 1 movem, lea, jsr, rts, branches
+    BEQ LEA_JSR_RTS_BCC     ; defined in lea_jsr_rts_bcc.x68
 
     INCLUDE 'maybe_move.x68'
     INCLUDE 'lea_jsr_rts_bcc.x68'

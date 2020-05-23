@@ -1,5 +1,4 @@
-
-MAYBE_MOVE
+MOVE_MOVEA
     * get the Size
     * 00 11 111 000 000 110
     * L2
@@ -15,23 +14,7 @@ MAYBE_MOVE
 
     * get destination register
     * 00 11 111 000 000 110
-    * L4
-    * 111 000 000 110 0000
-    * R13
-    *
-    * Goal: 0000 0000 0000 0111
-    MOVE.W D1, D4
-    LSL.W #4, D4
-    LSR.W #8, D4
-    LSR.W #5, D4
-    MOVE.B D4, D4
-
-
-    * get destination mode
-    * 00 11 111 000 000 110
-    * L7
-    * 000 000 110 0000 000
-    * R13
+    * L4maybe_move
     *
     * Goal: 0000 0000 0000 0000
     MOVE.W D1, D5
@@ -80,7 +63,6 @@ START_MOVEA_SR:
 
 START_MOVE_SR:
     JSR DISP_STR_MOVE   ; prints 'MOVE'
-
     BRA CHECK_DATA_TYPE
 
 CHECK_DATA_TYPE
@@ -93,25 +75,16 @@ CHECK_DATA_TYPE
     CMP.B #3, D3        ; Word
     BEQ DISP_STR_WORD   ; will branch to CHECK_SOURCE_MODE inside this sr
 
-DISP_STR_BYTE
-    MOVEA.L #0, A1      ; Clear A1
-    LEA STR_BYTE, A1   
-    MOVE.B #14, D0
-    TRAP #15
+PRINT_MOVE_BYTE
+    JSR DISP_STR_BYTE
     BRA CHECK_SOURCE_MODE
 
-DISP_STR_WORD
-    MOVEA.L #0, A1      ; Clear A1
-    LEA STR_WORD, A1   
-    MOVE.B #14, D0
-    TRAP #15
+PRINT_MOVE_BYTE
+    JSR DISP_STR_WORD
     BRA CHECK_SOURCE_MODE
 
-DISP_STR_LONG
-    MOVEA.L #0, A1      ; Clear A1
-    LEA STR_LONG, A1
-    MOVE.B #14, D0
-    TRAP #15
+PRINT_MOVE_LONG
+    JSR DISP_STR_LONG
     BRA CHECK_SOURCE_MODE
 
 CHECK_SOURCE_MODE:
@@ -130,15 +103,13 @@ CHECK_SOURCE_MODE:
 DISP_SOURCE_MODE_D
     MOVEA.L #0, A1      ; Clear A1
     LEA STR_D, A1
-    MOVE.B #14, D0
-    TRAP #15
+    JSR TRAP14
     BRA CHECK_SOURCE_REGISTER
 
 DISP_SOURCE_MODE_A
     MOVEA.L #0, A1      ; Clear A1
     LEA STR_A, A1
-    MOVE.B #14, D0
-    TRAP #15
+    JSR TRAP14
     BRA CHECK_SOURCE_REGISTER
 
 CHECK_SOURCE_REGISTER:
