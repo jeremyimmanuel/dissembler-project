@@ -4,7 +4,9 @@ START_ADDR_PROMPT       ; Prompt user for starting address
     CLR.L D2            ; Clear D2, for reading each bytes
     CLR.L D3            ; Clear D3, for holding the address
     
-    JSR DISP_START_ADDR_PROMPT
+    LEA     start_addr_instruction, A1  ; Display promp for starting address
+    MOVE.B #14, D0
+    TRAP #15
 
     MOVEA.L #0, A1      ; Clear A1, so that trap task #2 stores it here
                         ; which is $0000 0000 by default

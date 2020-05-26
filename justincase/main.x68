@@ -24,7 +24,6 @@ START:
                             ; starting address saved in A2
                             ; ending address saved in A3
 
-    
     INCLUDE 'constants.x68'
     INCLUDE 'displays.x68'
 
