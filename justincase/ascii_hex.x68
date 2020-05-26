@@ -77,8 +77,9 @@ MOVE_END_ADDR_REGISTER
 VALIDATE_START_ADDR
     BTST        #0,D3
     BNE         HANDLING_INVALID_BEG_ADDR               
+    
     CMP         #1,D2  
-    BEQ         VALIDATING_FINISH_ADDRESS               
+    BEQ         VALIDATING_FINISH_ADDRESS      ; If D2 is 1 then we already validated START_ADDRESS          
     ADDI        #1,D2 
     
     JSR         MOVE_START_ADDR_REGISTER
@@ -91,11 +92,11 @@ VALIDATING_FINISH_ADDRESS
     BNE         HANDLING_INVALID_FINISH_ADDR 
     CMP.L       START_ADDR_MEM_LOC, D3
     BLE         HANDLING_INVALID_FINISH_ADDR
-    CLR.W       D2
     
+    CLR.W       D2  
     JSR         MOVE_END_ADDR_REGISTER
-
     CLR.W       D3	
+    
     LEA         STR_SPACE, A1
     MOVE.B      #13,D0	
     TRAP        #15
@@ -109,6 +110,7 @@ HANDLING_INVALID_BEG_ADDR
     TRAP        #15	
     CLR         D3
     BRA         START_ADDR_PROMPT
+  
 
 HANDLING_INVALID_FINISH_ADDR
     MOVEA.L     #0,A1
@@ -117,6 +119,7 @@ HANDLING_INVALID_FINISH_ADDR
     TRAP        #15
     CLR         D3	
     BRA         END_ADDR_PROMPT
+    RTS
 
 
 ERROR

@@ -22,7 +22,7 @@ START_ADDR_PROMPT       ; Prompt user for starting address
 END_ADDR_PROMPT
     CLR.L D0            ; Clear D0, for trap task num
     CLR.L D1            ; Clear D1, for string length
-    CLR.L D2            ; Clear D2, for reading each bytes
+    * CLR.L D2            ; Clear D2, for reading each bytes
     CLR.L D3            ; Clear D3, for holding the address
     
     LEA     end_addr_instruction, A1  ; Display promp for starting address
