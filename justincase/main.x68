@@ -26,6 +26,6 @@ START:
 
     
     INCLUDE 'constants.x68'
-    * INCLUDE 'displays.x68'
+    INCLUDE 'displays.x68'
 
     END START
