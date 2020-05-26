@@ -83,5 +83,3 @@ error_message               DC.B 'Invalid Address exception, input was was not v
 START_ADDRESS DS.L 1
 END_ADDR      DS.L 1
 
-
-    END START
