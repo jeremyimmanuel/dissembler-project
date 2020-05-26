@@ -58,10 +58,31 @@ UTILITY_MOVE_TWO_OP
     JSR         0(A6,D3)					* Jumps to subroutine for the size with offset. 
     JSR         OUTPUT_DATA_MODE_SOURCE		* This subroutine will output the data mode source.
     JSR         OUTPUT_COMMA				* This invokes a subroutine that will output a comma
-    JSR         OUTPUT_EMPTY_SPACE			* Invokes subroutine to print a space
+    JSR         DISP_STR_SPACE			* Invokes subroutine to print a space
     JSR         OUTPUT_DATA_MODE_DEST		* This method will output the data stored in the 12-7 bits
     BSR         PRESS_ENTER_CHECK			* Branch to the PRESS_ENTER_CHECK subroutine to see if a new screen of more output is ready.
     BRA         DERIVING_OPCODE				* Branch to the subroutine for checking the next word and parsing it to see if it's an OpCode.
+    RTS
+
+OUTPUT_DATA_MODE_SOURCE         
+    LEA         JMPTABLE_FINDING_REG_MODE,A6	* Loads the address of the jump table for determining register mode 
+    MOVE.W      SRC_HOLDER, UTILITY_VAR			* Stores the SRC_HOLDER in the UTILITY_VAR for arithmetic 
+    MOVE        SRC_MODE_HOLDER,D3				* Store the SRC_MODE_HOLDER in D3 for arithmetic 
+    MULU        #6,D3							* Multiply unsigned by D3 to use it as an offset for JSR		
+    JSR         0(A6,D3)       					* Go to the jump table with appropraite offset to find the source mode
+    RTS
+
+OUTPUT_COMMA
+    LEA         STR_COMMA,A1
+    JSR         WHOLE_MESSAGE_OUTPUT		* Prints the string loaded in A1
+    RTS
+
+OUTPUT_DATA_MODE_DEST
+    LEA         JMPTABLE_FINDING_REG_MODE,A6	* Loads the address of the jump table for determining register mode 
+    MOVE.W      DEST_HOLDER, UTILITY_VAR        * Used in process of finding which type of register to output
+    MOVE.W      DEST_MODE_VAR,D3			* Stores the DEST_MODE_VAR in D3 for arithmetic 
+    MULU        #6,D3						* Multiply unsigned by D3 to use it as an offset for JSR
+    JSR         0(A6,D3)					* Go to the jump table with appropraite offset to find the destination mode
     RTS
 
 
