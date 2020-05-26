@@ -101,8 +101,7 @@ ERROR_CHECK_END_ADDR                  ;VALIDATING_FINISH_ADDRESS
    * LEA         STR_SPACE, A1                   ;
     * MOVE.B      #13,D0	
     * TRAP        #15
-    * BRA         LOADING_ADDRESSES
-    BRA DONE
+    BRA         LOADING_ADDRESSES
 
 INVALID_START_ADDR     ; HANDLING_INVALID_START_ADDR
     MOVEA.L     #0,A1                           ; Clear A1
@@ -127,7 +126,12 @@ ERROR
 									* been verified.
     BEQ         INVALID_END_ADDR * If it's equal to 1 then  										 * must have been invalid. 
     BRA         INVALID_START_ADDR	* If it's 0 then beginning address was wrong. 
-    
+
+LOADING_ADDRESSES
+    LEA         CHECK_FIRST_NIB_JMPTABLE, A0            ; Storing address of subroutine in A0
+    MOVE.L      START_ADDR_MEM_LOC, A2
+    MOVE.L      END_ADDR_MEM_LOC, A3
+    BRA         DERIVING_OPCODE	  ; JSR to opcode.x68
 
 DONE
     CLR.L D0

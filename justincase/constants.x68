@@ -17,7 +17,7 @@ STR_BYTE    DC.W '.B ', 0
 STR_WORD    DC.W '.W ', 0
 STR_LONG    DC.W '.L ', 0
 
-* Register numbers
+* Numbers
 STR_0      DC.W '0', 0
 STR_1      DC.W '1', 0
 STR_2      DC.W '2', 0
@@ -26,10 +26,17 @@ STR_4      DC.W '4', 0
 STR_5      DC.W '5', 0
 STR_6      DC.W '6', 0
 STR_7      DC.W '7', 0
+STR_8      DC.W '8', 0
+STR_9      DC.W '9', 0
 
-* Address Register
+
+* Letters
 STR_A      DC.W 'A', 0
+STR_B      DC.W 'B', 0
+STR_C      DC.W 'C', 0
 STR_D      DC.W 'D', 0
+STR_E      DC.W 'E', 0
+STR_F      DC.W 'F', 0
 
 * Comma
 STR_COMMA  DC.W ', ', 0
