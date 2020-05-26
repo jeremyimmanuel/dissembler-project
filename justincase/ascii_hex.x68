@@ -39,7 +39,7 @@ NUMBER_CHECK
     SUBI    #1, D1            ; count--
     
     CMP #0, D1              ; check for counter if 0 stop
-    BEQ VALIDATE_START_ADDR    ; when done, exit
+    BEQ ERROR_CHECK_START_ADDR    ; when done, validate
     
 
     BRA     ASCII_2_HEX       ; loop
@@ -59,7 +59,6 @@ LETTER_CHECK
     
     SUBI    #1, D1            ; count--   
     CMP #0, D1              ; check for counter if 0 stop
-    * BEQ VALIDATE_START_ADDR    ; when done, exit 
 
     BRA     ASCII_2_HEX       ; loop
     
@@ -74,49 +73,49 @@ MOVE_END_ADDR_REGISTER
     MOVE.L D3, END_ADDR_MEM_LOC
     RTS
 
-VALIDATE_START_ADDR
-    BTST        #0,D3
-    BNE         HANDLING_INVALID_BEG_ADDR               
+ERROR_CHECK_START_ADDR               ;VALIDATE_START_ADDR
+    BTST        #0,D3                           ; Check if even number
+    BNE         INVALID_START_ADDR      ; if not equal -> odd number; error
     
     CMP         #1,D2  
-    BEQ         VALIDATING_FINISH_ADDRESS      ; If D2 is 1 then we already validated START_ADDRESS          
-    ADDI        #1,D2 
+    BEQ         ERROR_CHECK_END_ADDR        ; If D2 is 1 then we already validated START_ADDRESS          
+    ADDI        #1,D2                           ; if initially 0 then we add 1 to toggle it to Validate End Addr
     
-    JSR         MOVE_START_ADDR_REGISTER
-    
-    CLR         D3
-    BRA         END_ADDR_PROMPT             ; 'in get_input.x68'
+    JSR         MOVE_START_ADDR_REGISTER        ; MOVE starting address we converted in D3
+                                                ; to the defined memory location
+    CLR         D3                              ; Clear D3
+    BRA         END_ADDR_PROMPT                 ; Ask user for ending address; 'get_input.x68'
 
-VALIDATING_FINISH_ADDRESS
-    BTST        #0,D3 
-    BNE         HANDLING_INVALID_FINISH_ADDR 
-    CMP.L       START_ADDR_MEM_LOC, D3
-    BLE         HANDLING_INVALID_FINISH_ADDR
+ERROR_CHECK_END_ADDR                  ;VALIDATING_FINISH_ADDRESS
+    BTST        #0,D3                           ; if equal then even
+    BNE         INVALID_END_ADDR                ; if not equal then odd; error
     
-    CLR.W       D2  
-    JSR         MOVE_END_ADDR_REGISTER
-    CLR.W       D3	
+    CMP.L       START_ADDR_MEM_LOC, D3          ; check if starting address is less than or equal to ending address
+    BLE         INVALID_END_ADDR                ; if yes, then error because start < end
     
-    LEA         STR_SPACE, A1
-    MOVE.B      #13,D0	
-    TRAP        #15
+    CLR.W       D2                              ; Clear D2
+    JSR         MOVE_END_ADDR_REGISTER          ; Move our ending address in D3 to defined 
+                                                ; memory location
+    CLR.W       D3	                            ; Clear D3
+    
+   * LEA         STR_SPACE, A1                   ;
+    * MOVE.B      #13,D0	
+    * TRAP        #15
     * BRA         LOADING_ADDRESSES
     BRA DONE
 
-HANDLING_INVALID_BEG_ADDR
-    MOVEA.L     #0,A1
-    LEA         error_message, A1
-    MOVE.B      #13,D0
+INVALID_START_ADDR     ; HANDLING_INVALID_START_ADDR
+    MOVEA.L     #0,A1                           ; Clear A1
+    LEA         error_message, A1               ; Load error message
+    MOVE.B      #13,D0                          ; Trap task #13
     TRAP        #15	
-    CLR         D3
-    BRA         START_ADDR_PROMPT
+    CLR         D3                              ; Clear D3
+    BRA         START_ADDR_PROMPT               ; Ask for starting address again
   
 
-HANDLING_INVALID_FINISH_ADDR
-    MOVEA.L     #0,A1
-    LEA         error_message, A1
-    MOVE.B      #13,D0
-    TRAP        #15
+INVALID_END_ADDR        ; HANDLING_INVALID_FINISH_ADDR
+    MOVEA.L     #0,A1                           ; Clear A1
+    JSR         DISP_INVALID_ADDRESS_ERROR                         
     CLR         D3	
     BRA         END_ADDR_PROMPT
     RTS
@@ -126,14 +125,9 @@ ERROR
     CMP         #1,D0				* Checks the D2 register to see if 
 									* the starting address has already
 									* been verified.
-    BEQ         HANDLING_INVALID_FINISH_ADDR * If it's equal to 1 then  										 * must have been invalid. 
-    BRA         HANDLING_INVALID_BEG_ADDR	* If it's 0 then beginning address was wrong. 
+    BEQ         INVALID_END_ADDR * If it's equal to 1 then  										 * must have been invalid. 
+    BRA         INVALID_START_ADDR	* If it's 0 then beginning address was wrong. 
     
-    *CLR.L D0
-    *MOVE #$FFFFFFFF, D7
-    *LEA error_message, A1   ; Display error message
-    *MOVE.B  #14, D0         ; Trap task #14
-    *TRAP    #15
 
 DONE
     CLR.L D0

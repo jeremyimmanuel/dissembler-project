@@ -1,6 +1,11 @@
 * Display Subroutines
 * All these DISPLAY subroutines must be called via
 * a BSR / JSR because of the RTS
+TRAP13
+    MOVE.B #13, D0
+    TRAP #15
+    RTS
+
 TRAP14
     MOVE.B #14, D0
     TRAP #15
@@ -10,6 +15,17 @@ DISP_START_ADDR_PROMPT
     MOVEA.L #0, A1      ; Clear A1
     LEA     start_addr_instruction, A1  ; Display promp for starting address
     JSR TRAP14
+    RTS
+
+DISP_INVALID_ADDRESS_ERROR
+    LEA         error_message, A1               ; Load error message
+    MOVE.B      #13,D0                          ; Trap task 13
+    TRAP        #15    
+    RTS
+
+DISP_NEW_LINE
+    LEA STR_SPACE, A1                   
+    JSR TRAP13
     RTS
 
 DISP_STR_MOVE
