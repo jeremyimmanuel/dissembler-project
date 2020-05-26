@@ -92,7 +92,9 @@ VALIDATING_FINISH_ADDRESS
     CMP.L       START_ADDR_MEM_LOC, D3
     BLE         HANDLING_INVALID_FINISH_ADDR
     CLR.W       D2
-    MOVE.L      D3,END_ADDR_MEM_LOC
+    
+    JSR         MOVE_END_ADDR_REGISTER
+
     CLR.W       D3	
     LEA         STR_SPACE, A1
     MOVE.B      #13,D0	
