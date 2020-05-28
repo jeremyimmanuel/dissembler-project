@@ -28,6 +28,7 @@ DISP_NEW_LINE
     JSR TRAP13
     RTS
 
+********************* Op-code *********************
 DISP_STR_MOVE
     MOVEA.L #0, A1      ; Clear A1
     LEA STR_MOVE, A1
@@ -40,11 +41,53 @@ DISP_STR_MOVEA
     JSR TRAP14
     RTS
 
+DISP_STR_MOVEM
+    MOVEA.L #0, A1      ; Clear A1
+    LEA STR_MOVEM, A1
+    JSR TRAP14
+    RTS
+
 DISP_STR_LEA
     LEA STR_LEA, A1
     JSR TRAP14
     RTS
 
+DISP_STR_RTS
+    LEA STR_RTS, A1
+    JSR TRAP14
+    RTS
+
+DISP_STR_JSR
+    LEA STR_JSR, A1
+    JSR TRAP14
+    RTS
+
+DISP_STR_OR
+    LEA STR_OR, A1
+    JSR TRAP14
+    RTS
+
+DISP_STR_SUB
+    LEA STR_SUB, A1
+    JSR TRAP14
+    RTS
+
+DISP_STR_CMP
+    LEA STR_CMP, A1
+    JSR TRAP14
+    RTS
+
+DISP_STR_AND
+    LEA STR_AND, A1
+    JSR TRAP14
+    RTS
+
+DISP_STR_ADD
+    LEA STR_ADD, A1
+    JSR TRAP14
+    RTS
+    
+******************************************
 DISP_STR_COMMA
     MOVEA.L #0, A1
     LEA STR_COMMA, A1
@@ -72,15 +115,6 @@ DISP_STR_LONG
 DISP_STR_SPACE
     MOVEA.L #0, A1
     LEA STR_SPACE, A1
-    JSR TRAP14
-    RTS
-
-DISP_STR_A 
-    LEA STR_A, A1
-    JSR TRAP14
-    RTS
-DISP_STR_D 
-    LEA STR_D, A1
     JSR TRAP14
     RTS
 
