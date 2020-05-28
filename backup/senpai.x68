@@ -270,7 +270,7 @@ VALIDATING_BEG_ADDRESS
 	BEQ         VALIDATING_FINISH_ADDRESS	* If it is equal to 1, then the program 
 											* already has a validated starting address
 											* therefore we shift control to the 
-											* ending address validation subroutine. 
+											* ending address validation subroutine.
 											
     ADDI        #1,D2                       * As mentioned earlier this is the toggle
 											* of sorts that will indicate that the 
@@ -2312,7 +2312,6 @@ MEM_0
     MOVE.W      #1,D7
 MEM_END 
     RTS
-    
 
 ***
 * Movem slashes
