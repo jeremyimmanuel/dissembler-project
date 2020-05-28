@@ -131,7 +131,7 @@ LOADING_ADDRESSES
     LEA         CHECK_FIRST_NIB_JMPTABLE, A0            ; Storing address of subroutine in A0
     MOVE.L      START_ADDR_MEM_LOC, A2
     MOVE.L      END_ADDR_MEM_LOC, A3
-    BRA         DERIVING_OPCODE	  ; JSR to opcode.x68
+    BRA         DERIVING_OPCODE	                        ; JSR to opcode.x68
 
 DONE
     CLR.L D0

@@ -25,12 +25,12 @@ UPDATE_DEST_SRC_VAR
     LSR         #8,D3                       * After the manipulations the D3 holds the destination
     LSR         #1,D3
     MOVE.W      D3,DEST_HOLDER				* Copy the Destination to the DEST_HOLDER
-    MOVE.W      CURR_NIBBLES_MEM_LOC,D3	* Reload the current four nibbles that 
+    MOVE.W      CURR_NIBBLES_MEM_LOC,D3	    * Reload the current four nibbles that 
     LSL         #7,D3
     LSR         #7,D3
     LSR         #6,D3
     MOVE.W      D3,DEST_MODE_VAR			* Now has DEST_MODE_VAR so copy to it
-    MOVE.W      CURR_NIBBLES_MEM_LOC,D3	* Reload the current four nibbles that 
+    MOVE.W      CURR_NIBBLES_MEM_LOC,D3	    * Reload the current four nibbles that 
 										
     LSL         #8,D3
     LSL         #2,D3
@@ -39,14 +39,14 @@ UPDATE_DEST_SRC_VAR
     LSR         #3,D3
     MOVE.W      D3,SRC_MODE_HOLDER          * After manipulation copy source mode over
 											* finally get the source itself
-    MOVE.W      CURR_NIBBLES_MEM_LOC,D3	* Reload the current four nibbles that 
+    MOVE.W      CURR_NIBBLES_MEM_LOC,D3	    * Reload the current four nibbles that 
 											
     LSL         #8,D3
     LSL         #5,D3
     LSR         #8,D3
     LSR         #5,D3
     MOVE.W      D3,SRC_HOLDER				* Copy over the source 
-    MOVE.W      CURR_NIBBLES_MEM_LOC,D3	* Reload the current four nibbles that 										
+    MOVE.W      CURR_NIBBLES_MEM_LOC,D3	    * Reload the current four nibbles that 										
     RTS
 
 UTILITY_MOVE_TWO_OP
@@ -84,5 +84,3 @@ OUTPUT_DATA_MODE_DEST
     MULU        #6,D3						* Multiply unsigned by D3 to use it as an offset for JSR
     JSR         0(A6,D3)					* Go to the jump table with appropraite offset to find the destination mode
     RTS
-
-
