@@ -24,8 +24,8 @@ DISP_INVALID_ADDRESS_ERROR
     RTS
 
 DISP_NEW_LINE
-    LEA STR_SPACE, A1                   
-    JSR TRAP13
+    LEA NEW_LINE, A1                   
+    JSR TRAP14
     RTS
 
 ********************* Op-code *********************
@@ -62,6 +62,19 @@ DISP_STR_JSR
     JSR TRAP14
     RTS
 
+DISP_STR_BCC
+    LEA STR_BCC, A1
+    JSR TRAP14
+    RTS
+DISP_STR_BGT
+    LEA STR_BGT, A1
+    JSR TRAP14
+    RTS
+DISP_STR_BLE
+    LEA STR_BLE, A1
+    JSR TRAP14
+    RTS
+
 DISP_STR_OR
     LEA STR_OR, A1
     JSR TRAP14
@@ -86,7 +99,27 @@ DISP_STR_ADD
     LEA STR_ADD, A1
     JSR TRAP14
     RTS
-    
+
+DISP_STR_LSLm
+    LEA STR_LSLm, A1
+    JSR TRAP14
+    RTS
+
+DISP_STR_LSLr
+    LEA STR_LSLr, A1
+    JSR TRAP14
+    RTS
+
+DISP_STR_ASRm
+    LEA STR_ASRm, A1
+    JSR TRAP14
+    RTS
+
+DISP_STR_ASRr
+    LEA STR_ASRr, A1
+    JSR TRAP14
+    RTS
+
 ******************************************
 DISP_STR_COMMA
     MOVEA.L #0, A1

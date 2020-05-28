@@ -13,11 +13,17 @@ STR_RTS                     DC.W 'RTS', 0
 STR_JSR                     DC.W 'JSR', 0
 STR_BCC                     DC.W 'BCC', 0
 STR_BGT                     DC.W 'BGT', 0
+STR_BLE                     DC.W 'BLE', 0
 STR_OR                      DC.W 'OR', 0
 STR_SUB                     DC.W 'SUB', 0
 STR_CMP                     DC.W 'CMP', 0
 STR_AND                     DC.W 'AND', 0
 STR_ADD                     DC.W 'ADD', 0
+
+STR_LSLm                     DC.W 'LSLm', 0
+STR_LSLr                     DC.W 'LSLr', 0
+STR_ASRm                     DC.W 'ASRm', 0
+STR_ASRr                     DC.W 'ASRr', 0
                 
 * Data size                
 STR_BYTE                    DC.W '.B ', 0
@@ -48,6 +54,7 @@ STR_F                       DC.W 'F', 0
 STR_COMMA                   DC.W ', ', 0
 
 * Space
+NEW_LINE                    DC.B CR,LF,0
 STR_SPACE                   DC.W ' ', 0
 
 * Error message
