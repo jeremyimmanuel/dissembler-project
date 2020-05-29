@@ -42,7 +42,7 @@ Parse_Start
 
 Search_Opcode
     * Get the first nibble
-    CMP.L #$4E75,D7    * for RTS
+    CMP.L #$4E75,D7    * RTS
     BEQ Print_RTS
     MOVEM.L D7, -(SP)
     LSR.W #8, D7
