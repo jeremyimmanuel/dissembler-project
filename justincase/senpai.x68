@@ -189,43 +189,7 @@ HEX_TO_ASCII_CHANGER_FULLSIZE
     JSR         OUTPUT_EMPTY_SPACE			* Invokes subroutine to print a space
     RTS
 
-******
- * The LOADING_ADDRESSES subroutine: 
- * --------------------------------------
- * This subroutine is responsible for loading 
- * the values stored in the BEGINNING_ADDRESS
- * and FINISHING_ADDRESS to the A2 + A3 
- * addresses since the disassembler 
- * uses the A2 to track its current position
- * of examined spaces in memory while A3 
- * is used to compare to ensure that 
- * the disassembler didn't disassemble 
- * past it's expected ending address. 
- *
- * This subroutine is only invoked once
- * the disassembler has completed all 
- * subroutines that verified that the 
- * starting and ending addresses were
- * entered and converted properly.  
- ****
-LOADING_ADDRESSES
-    LEA         CHECK_FIRST_NIB_JMPTABLE,A0  * This instruction will load the address 
-											 * of the CHECK_FIRST_NIB_JMPTABLE to the A0 
-											 * register to enable the decoding 
-											 * of the first nibble. 
-											 
-    MOVE.L      BEGINNING_ADDRESS,A2		 * This instruction is loading the BEGINNING_ADDRESS
-											 * variable to a more permanent A2 register
-											 * which will be used to track the current position
-											 * of the disassembler. 
-											 
-    MOVE.L      FINISHING_ADDRESS,A3		 * This instruction is loading the FINISHING_ADDRESS
-											 * variable to a more permanent A3 register
-											 * which will be used to ensure the disassembler
-											 * doesn't go past it's ending address. 
-											 
-    BRA         DERIVING_OPCODE				* Branch to the subroutine for checking the next word and parsing it to see if it's an OpCode.              * This instruction will begin the 
-	                                         * process of parsing the opcode now
+
 
 ******
  * The PRESS_ENTER_CHECK subroutine: 
