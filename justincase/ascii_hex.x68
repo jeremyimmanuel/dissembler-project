@@ -14,20 +14,17 @@
 * When done, move D3 to A2
 *
 
-
-CR EQU $0D
-LF EQU $0A
     
-ASCII_2_HEX
+ASCII_TO_HEX_CHANGER
     LSL.L   #4, D3          ; Shifting one hexabit at holder
     MOVE.B (A1)+, D0        ; move to register to save time
           
 
 NUMBER_CHECK    
     CMP.B   #'0', D0          ; if less than 0, error
-    BLT     ERROR
+    BLT     SWITCH_BAD_INPUT
     CMP.B   #'9', D0          ; if greater than 9, maybe letter
-    BGT     LETTER_CHECK      ; branch to LETTER_CHECK
+    BGT     ASCII_TO_HEX_CHAR_CHANGER      ; branch to LETTER_CHECK
 
     
     SUB.B   #'0', D0          ; converting to hex
@@ -38,18 +35,18 @@ NUMBER_CHECK
 
     SUBI    #1, D1            ; count--
     
-    CMP #0, D1              ; check for counter if 0 stop
-    BEQ ERROR_CHECK_START_ADDR    ; when done, validate
+    CMP     #0, D1              ; check for counter if 0 stop
+    BEQ     VALIDATING_BEG_ADDRESS    ; when done, validate
     
 
-    BRA     ASCII_2_HEX       ; loop
+    BRA     ASCII_TO_HEX_CHANGER       ; loop
 
     * Range check for A-F
-LETTER_CHECK    
+ASCII_TO_HEX_CHAR_CHANGER    
     CMP.B   #'A', D0          ; if less than A, error
-    BLT     ERROR
+    BLT     SWITCH_BAD_INPUT
     CMP.B   #'F', D0          ; if greater than F, error
-    BGT     ERROR
+    BGT     SWITCH_BAD_INPUT
 
     SUB.B   #'7', D0          ; if got here then valid letter
     ADD.B   D0, D3            ; Add byte from D2 to D3
@@ -60,38 +57,35 @@ LETTER_CHECK
     SUBI    #1, D1            ; count--   
     CMP #0, D1              ; check for counter if 0 stop
 
-    BRA     ASCII_2_HEX       ; loop
+    BRA     ASCII_TO_HEX_CHANGER       ; loop
     
-EXIT_ASCII_2_HEX
-    RTS
-
 MOVE_START_ADDR_REGISTER
-    MOVE.L D3, START_ADDR_MEM_LOC
+    MOVE.L D3, BEGINNING_ADDRESS
     RTS
-
+    
 MOVE_END_ADDR_REGISTER
-    MOVE.L D3, END_ADDR_MEM_LOC
+    MOVE.L D3, FINISHING_ADDRESS
     RTS
 
-ERROR_CHECK_START_ADDR               ;VALIDATE_START_ADDR
+VALIDATING_BEG_ADDRESS              ;VALIDATE_START_ADDR
     BTST        #0,D3                           ; Check if even number
-    BNE         INVALID_START_ADDR      ; if not equal -> odd number; error
+    BNE         HANDLING_INVALID_BEG_ADDR      ; if not equal -> odd number; error
     
     CMP         #1,D2  
-    BEQ         ERROR_CHECK_END_ADDR        ; If D2 is 1 then we already validated START_ADDRESS          
+    BEQ         VALIDATING_FINISH_ADDRESS        ; If D2 is 1 then we already validated START_ADDRESS          
     ADDI        #1,D2                           ; if initially 0 then we add 1 to toggle it to Validate End Addr
     
     JSR         MOVE_START_ADDR_REGISTER        ; MOVE starting address we converted in D3
                                                 ; to the defined memory location
     CLR         D3                              ; Clear D3
-    BRA         END_ADDR_PROMPT                 ; Ask user for ending address; 'get_input.x68'
+    BRA         GET_FINISH_ADDR                 ; Ask user for ending address; 'get_input.x68'
 
-ERROR_CHECK_END_ADDR                  ;VALIDATING_FINISH_ADDRESS
+VALIDATING_FINISH_ADDRESS                       ; VALIDATING_FINISH_ADDRESS
     BTST        #0,D3                           ; if equal then even
-    BNE         INVALID_END_ADDR                ; if not equal then odd; error
+    BNE         HANDLING_INVALID_FINISH_ADDR                ; if not equal then odd; error
     
-    CMP.L       START_ADDR_MEM_LOC, D3          ; check if starting address is less than or equal to ending address
-    BLE         INVALID_END_ADDR                ; if yes, then error because start < end
+    CMP.L       BEGINNING_ADDRESS, D3          ; check if starting address is less than or equal to ending address
+    BLE         HANDLING_INVALID_FINISH_ADDR                ; if yes, then error because start < end
     
     CLR.W       D2                              ; Clear D2
     JSR         MOVE_END_ADDR_REGISTER          ; Move our ending address in D3 to defined 
@@ -101,44 +95,42 @@ ERROR_CHECK_END_ADDR                  ;VALIDATING_FINISH_ADDRESS
    * LEA         STR_SPACE, A1                   ;
     * MOVE.B      #13,D0	
     * TRAP        #15
-    BRA         LOADING_ADDRESSES
+    BRA         DONE
 
-INVALID_START_ADDR     ; HANDLING_INVALID_START_ADDR
+HANDLING_INVALID_BEG_ADDR     ; HANDLING_INVALID_START_ADDR
     MOVEA.L     #0,A1                           ; Clear A1
-    LEA         error_message, A1               ; Load error message
+    LEA         BAD_INPUT_MSG, A1               ; Load error message
     MOVE.B      #13,D0                          ; Trap task #13
     TRAP        #15	
     CLR         D3                              ; Clear D3
-    BRA         START_ADDR_PROMPT               ; Ask for starting address again
+    BRA         GET_BEGIN_ADDR               ; Ask for starting address again
   
 
-INVALID_END_ADDR        ; HANDLING_INVALID_FINISH_ADDR
+HANDLING_INVALID_FINISH_ADDR        ; HANDLING_INVALID_FINISH_ADDR
     MOVEA.L     #0,A1                           ; Clear A1
-    JSR         DISP_INVALID_ADDRESS_ERROR                         
+    LEA         BAD_INPUT_MSG,A1	* Loads the message about bad input to A1
+    MOVE.B      #13,D0				* Preps the TRAP TASK #13
+    TRAP        #15	             
+    
     CLR         D3	
-    BRA         END_ADDR_PROMPT
-    RTS
+    BRA         GET_FINISH_ADDR
 
 
-ERROR
-    CMP         #1,D0				* Checks the D2 register to see if 
+SWITCH_BAD_INPUT
+    CMP         #1, D0				* Checks the D2 register to see if 
 									* the starting address has already
 									* been verified.
-    BEQ         INVALID_END_ADDR * If it's equal to 1 then  										 * must have been invalid. 
-    BRA         INVALID_START_ADDR	* If it's 0 then beginning address was wrong. 
+    BEQ         HANDLING_INVALID_FINISH_ADDR * If it's equal to 1 then  										 * must have been invalid. 
+    BRA         HANDLING_INVALID_BEG_ADDR	* If it's 0 then beginning address was wrong. 
 
-LOADING_ADDRESSES
-    LEA         CHECK_FIRST_NIB_JMPTABLE, A0            ; Storing address of subroutine in A0
-    MOVE.L      START_ADDR_MEM_LOC, A2
-    MOVE.L      END_ADDR_MEM_LOC, A3
-    BRA         DERIVING_OPCODE	                        ; JSR to opcode.x68
+* LOADING_ADDRESSES
+*     LEA         CHECK_FIRST_NIB_JMPTABLE, A0            ; Storing address of subroutine in A0
+*     MOVE.L      START_ADDR_MEM_LOC, A2
+*     MOVE.L      END_ADDR_MEM_LOC, A3
+*     BRA         DERIVING_OPCODE	                        ; JSR to opcode.x68
 
-DONE
-    CLR.L D0
+DONE 
     SIMHALT
-
-
 * START_ADDRESS DS.L 1
 * END_ADDR      DS.L 1
-
 
