@@ -27,5 +27,3 @@ GET_FINISH_ADDR
                         ; it will also store the bit count in D1
 
     BRA ASCII_TO_HEX_CHANGER
-
-    BRA DONE
