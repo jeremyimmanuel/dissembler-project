@@ -32,6 +32,7 @@ START:
                             ; ending address saved in A3
     * INCLUDE 'opcode.x68'
     * INCLUDE 'hex_ascii.x68'
+    INCLUDE 'senpai.x68'
 
 
     INCLUDE 'constants.x68'     ; constants file

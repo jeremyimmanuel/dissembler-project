@@ -95,7 +95,7 @@ VALIDATING_FINISH_ADDRESS                       ; VALIDATING_FINISH_ADDRESS
    * LEA         STR_SPACE, A1                   ;
     * MOVE.B      #13,D0	
     * TRAP        #15
-    BRA         DONE
+    BRA         LOADING_ADDRESSES
 
 HANDLING_INVALID_BEG_ADDR     ; HANDLING_INVALID_START_ADDR
     MOVEA.L     #0,A1                           ; Clear A1
@@ -123,14 +123,10 @@ SWITCH_BAD_INPUT
     BEQ         HANDLING_INVALID_FINISH_ADDR * If it's equal to 1 then  										 * must have been invalid. 
     BRA         HANDLING_INVALID_BEG_ADDR	* If it's 0 then beginning address was wrong. 
 
-* LOADING_ADDRESSES
-*     LEA         CHECK_FIRST_NIB_JMPTABLE, A0            ; Storing address of subroutine in A0
-*     MOVE.L      START_ADDR_MEM_LOC, A2
-*     MOVE.L      END_ADDR_MEM_LOC, A3
-*     BRA         DERIVING_OPCODE	                        ; JSR to opcode.x68
+LOADING_ADDRESSES
+    LEA         CHECK_FIRST_NIB_JMPTABLE, A0            ; Storing address of subroutine in A0
+    MOVE.L      BEGINNING_ADDRESS, A2
+    MOVE.L      FINISHING_ADDRESS, A3
+    BRA         DERIVING_OPCODE	                        ; JSR to opcode.x68
 
-DONE 
-    SIMHALT
-* START_ADDRESS DS.L 1
-* END_ADDR      DS.L 1
 
