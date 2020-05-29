@@ -12,7 +12,6 @@ GET_BEGIN_ADDR       ; Prompt user for starting address
                         ; it will also store the bit count in D1
 
     BRA ASCII_TO_HEX_CHANGER
-    * JSR MOVE_START_ADDR_REGISTER
 
 GET_FINISH_ADDR
     LEA     GET_END_ADDR, A1  ; Display promp for starting address
