@@ -5,17 +5,24 @@
 * Description: 
 *-----------------------------------------------------------
 
-START_ADDR_MEM_LOC          EQU    $400     ; BEGINING_ADDRESS
-END_ADDR_MEM_LOC            EQU    $450     ; FINISHING_ADDRESS
-CURR_NIBBLES_MEM_LOC        EQU    $500     ; CURRENT_FOUR_NIBBLES_VAR
-DEST_MEM_LOC                EQU    $550     ; DEST_HOLDER
-DEST_MODE_MEM_LOC           EQU    $600     ; DEST_MODE_VAR
-SRC_MODE_MEM_LOC            EQU    $650     ; SRC_MODE_HOLDER
-SRC_MEM_LOC                 EQU    $700     ; SRC_HOLDER
-STORAGE_MEM_LOC             EQU    $750     ; UTILITY_VAR 
-A1_COPY_ONE_MEM_LOC         EQU    $800     ; A1_COPY_ONE 
-A1_COPY_TWO_MEM_LOC         EQU    $850     ; A1_COPY_TWO
-STORE_TWO_NIBBLES_MEM_LOC   EQU    $900    ; CURRENT_TWO_NIBBLES_VAR
+****
+ * REFERENCE:
+ * ----------
+ * The address register 'A2' is used to represent the starting address that will be iterated until the ending adrress
+ * The address register 'A3' is used to represent the ending address
+ * The data register 'D7' is used as the toggle for MOVEM '/' output 
+ **
+BEGINNING_ADDRESS           EQU    $100 * This address in the memory will store the inputted user starting address
+FINISHING_ADDRESS           EQU    $150 * This address in the memory will store the inputted user ending address
+CURRENT_FOUR_NIBBLES_VAR    EQU    $200 * This variable will represent '4' nibbles which are used for reading purposes
+DEST_HOLDER                 EQU    $250 * This variable represents the address number of the destination which are typically the [11-9th bit]
+DEST_MODE_VAR               EQU    $300 * This variable represents the destination mode which are typically the [8-6 bit]
+SRC_MODE_HOLDER             EQU    $350 * This variable represents the source mode which are typically the [5-3]
+SRC_HOLDER                  EQU    $400 * This variable represents the address number of the source which are typically the [2-0 bit]
+UTILITY_VAR                 EQU    $550 * This variable is used throughout the program as a temporary variable manipulated by various subroutines to store data. 
+A1_COPY_ONE                 EQU    $600 * This variable was specified as a copy of (A1) as to avoid overwriting the value in (A1) when obtaining the end address
+A1_COPY_TWO                 EQU    $650 * This variable was specified as a copy of (A1) as to avoid overwriting the value in (A1) when obtaining the starting address
+CURRENT_TWO_NIBBLES_VAR     EQU    $750 * This variable will represent '2' nibbles which are used for reading purposes 
     
     ORG $1000
 START:
@@ -27,7 +34,7 @@ START:
     INCLUDE 'hex_ascii.x68'
 
 
-    INCLUDE 'constants.x68'
+    INCLUDE 'constants.x68'     ; constants file
     INCLUDE 'displays.x68'
 
     END START
