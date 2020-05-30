@@ -2369,15 +2369,6 @@ CHECK_FIRST_NIB_JMPTABLE                  * Based on the first byte of the op co
  * This can be CMPI  
  ***
 FIRST_NIB_0
-    MOVE.W      CURRENT_FOUR_NIBBLES_VAR,D3	* Reload the current four nibbles that 
-											* the disassembler is looking at to D3
-											* NOTE: At this stage D3 serves as a copy 
-											* that will be used for manipulations 
-											* to leave only specific bits that
-											* other subroutines will need for validation. 
-    JSR         STORE_SECOND_NIBBLE_IN_D3   * This instruction is a jump to a subroutine designed specifically for getting the second nibble 
-    CMP         #$C, D3						* Check to see if second nibbles is #$C 
-    BEQ         OUTPUT_CMPI					* If it is then it's CMPI 
     BRA         INVALID_OPCODE				* We don't support other opcodes here so branch to invalid 
     RTS
 
