@@ -488,17 +488,17 @@ OUTPUT_CMPI
 
 
 OUTPUT_ADDI
-    LEA         STR_DATA,A1                  * Loads the string for CMPI for output
-    JSR         WHOLE_MESSAGE_OUTPUT		* Prints the string loaded in A1         * Prints the string loaded in A1
+    * LEA         STR_DATA,A1                  * Loads the string for CMPI for output
+    * JSR         WHOLE_MESSAGE_OUTPUT		* Prints the string loaded in A1         * Prints the string loaded in A1
     LEA         STR_NOT_SUPPORTED, A1
     JSR         WHOLE_MESSAGE_OUTPUT
     MOVE.W      CURRENT_FOUR_NIBBLES_VAR,D3	 * Reload the current four nibbles that 
 											
 											 
-    JSR         UPDATE_DEST_SRC_VAR			* This subroutine will update the Destination Source Variable. 			 * This subroutine will update the 
+    * JSR         UPDATE_DEST_SRC_VAR			* This subroutine will update the Destination Source Variable. 			 * This subroutine will update the 
 											 * Destination Source Variable
 											 
-    JSR         SUFFIX_OUTPUT_JMP			 * Jumps to the SUFFIX_OUTPUT_JMP to determine
+    * JSR         SUFFIX_OUTPUT_JMP			 * Jumps to the SUFFIX_OUTPUT_JMP to determine
 											 * the appropriate suffix for print out.
 											 
     * JSR         OUTPUT_EMPTY_SPACE			* Invokes subroutine to print a space           * Invokes subroutine to print a space 

@@ -3,40 +3,40 @@
 ****************************
 
 * Instruction strings
-CR                          EQU $0D
-LF                          EQU $0A
-STR_MOVE                    DC.W 'MOVE', 0
-STR_MOVEA                   DC.W 'MOVEA', 0
-STR_MOVEM                   DC.W 'MOVEM', 0
-STR_LEA                     DC.W 'LEA', 0
-STR_RTS                     DC.W 'RTS', 0
-STR_JSR                     DC.W 'JSR', 0
-STR_BCC                     DC.W 'BCC', 0
-STR_BGT                     DC.W 'BGT', 0
-STR_BLE                     DC.W 'BLE', 0
-STR_OR                      DC.W 'OR', 0
-STR_SUB                     DC.W 'SUB', 0
-STR_CMP                     DC.W 'CMP', 0
-STR_AND                     DC.W 'AND', 0
-STR_ADD                     DC.W 'ADD', 0
+CR                          EQU     $0D
+LF                          EQU     $0A
+STR_MOVE                    DC.W    'MOVE', 0
+STR_MOVEA                   DC.W    'MOVEA', 0
+STR_MOVEM                   DC.W    'MOVEM', 0
+STR_LEA                     DC.W    'LEA', 0
+STR_RTS                     DC.W    'RTS', 0
+STR_JSR                     DC.W    'JSR', 0
+STR_BCC                     DC.W    'BCC', 0
+STR_BGT                     DC.W    'BGT', 0
+STR_BLE                     DC.W    'BLE', 0
+STR_OR                      DC.W    'OR',  0
+STR_SUB                     DC.W    'SUB', 0
+STR_CMP                     DC.W    'CMP', 0
+STR_AND                     DC.W    'AND', 0
+STR_ADD                     DC.W    'ADD', 0
 
-STR_LSLm                     DC.W 'LSLm', 0
-STR_LSLr                     DC.W 'LSLr', 0
-STR_ASRm                     DC.W 'ASRm', 0
-STR_ASRr                     DC.W 'ASRr', 0
+STR_LSLm                    DC.W   'LSLm', 0
+STR_LSLr                    DC.W   'LSLr', 0
+STR_ASRm                    DC.W   'ASRm', 0
+STR_ASRr                    DC.W   'ASRr', 0
 
-STR_OPEN_BRACK         	DC.W        '(',0		* Symbol used for formatting 
-STR_CLOSE_BRACK         DC.W        ')',0		* Symbol used for formatting 
-MOVEM_SLASH             DC.W        '/',0		* Symbol used for formatting 
-STR_PLUS               	DC.W        '+',0		* Symbol used for formatting 
-STR_MINUS              	DC.W        '-',0		* Symbol used for formatting 
-STR_DATA_REG           	DC.W        'D',0		* Symbol used for formatting 
-STR_ADDR_REG        	DC.W        'A',0		* Symbol used for formatting 
-STR_COMMA               DC.W        ',',0		* Symbol used for formatting 
-STR_SPACE               DC.W        ' ',0		* Symbol used for formatting 
-STR_BIN_SYMBOL          DC.W        '%',0		* Symbol used for formatting 
-STR_HEX_SYMBOL          DC.W        '$',0		* Symbol used for formatting 
-EA_IMMI_DATA_SYMBOL   	DC.W        '#',0		* Symbol used for formatting 
+STR_OPEN_BRACK         	    DC.W    '(', 0   * Symbol used for formatting 
+STR_CLOSE_BRACK             DC.W    ')', 0   * Symbol used for formatting 
+MOVEM_SLASH                 DC.W    '/', 0   * Symbol used for formatting 
+STR_PLUS               	    DC.W    '+', 0   * Symbol used for formatting 
+STR_MINUS              	    DC.W    '-', 0   * Symbol used for formatting 
+STR_DATA_REG           	    DC.W    'D', 0   * Symbol used for formatting 
+STR_ADDR_REG        	    DC.W    'A', 0   * Symbol used for formatting 
+STR_COMMA                   DC.W    ',', 0   * Symbol used for formatting 
+STR_SPACE                   DC.W    ' ', 0   * Symbol used for formatting 
+STR_BIN_SYMBOL              DC.W    '%', 0   * Symbol used for formatting 
+STR_HEX_SYMBOL              DC.W    '$', 0   * Symbol used for formatting 
+EA_IMMI_DATA_SYMBOL   	    DC.W    '#', 0   * Symbol used for formatting 
 
 * Data size                
 STR_BYTE                    DC.W '.B ', 0
@@ -67,7 +67,7 @@ STR_F                       DC.W 'F', 0
 STR_COMMA                   DC.W ', ', 0
 
 * Space
-NEW_LINE                    DC.B CR,LF,0
+NEW_LINE                    DC.B CR,LF, 0
 STR_SPACE                   DC.W ' ', 0
 
 * Error message
