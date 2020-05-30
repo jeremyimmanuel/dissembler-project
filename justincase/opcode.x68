@@ -488,10 +488,9 @@ OUTPUT_CMPI
 
 
 OUTPUT_ADDI
-    * LEA         STR_DATA,A1                  * Loads the string for CMPI for output
-    * JSR         WHOLE_MESSAGE_OUTPUT		* Prints the string loaded in A1         * Prints the string loaded in A1
-    LEA         STR_NOT_SUPPORTED, A1
-    JSR         WHOLE_MESSAGE_OUTPUT
+    LEA         STR_DATA,A1                  * Loads the string for CMPI for output
+    JSR         WHOLE_MESSAGE_OUTPUT		* Prints the string loaded in A1         * Prints the string loaded in A1
+    
     MOVE.W      CURRENT_FOUR_NIBBLES_VAR,D3	 * Reload the current four nibbles that 
 											
 											 
@@ -2821,7 +2820,7 @@ FIRST_NIB_E
  * point when you should get to decide if you want to restart or finish.
  ***
 FIRST_NIB_F 
-    BRA         RESTART_OR_FINISH
+    BRA         DERIVING_OPCODE
     RTS
     SIMHALT
 
@@ -3432,7 +3431,7 @@ RESTART_OR_FINISH
  *	case of an invalid ending input. 
  ****
 INVALID_END
-    LEA         INVALID_ENDING, A1
+    *LEA         INVALID_ENDING, A1
     MOVE.B      #14,D0
     TRAP        #15
     BRA         RESTART_OR_FINISH

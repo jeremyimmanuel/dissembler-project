@@ -1,6 +1,8 @@
 ******************************************************************
 * Constant String that is used to print out the data is stored here
 ******************************************************************
+
+
 TOGGLE                  DS.W        1           * Allocate 1 word of uninitialized storage
 CR EQU $0D
 LF EQU $0A
@@ -79,3 +81,6 @@ STR_D                   DC.W        'D',0		* Symbol used for formatting
 STR_E                   DC.W        'E',0		* Symbol used for formatting 
 STR_F                   DC.W        'F',0		* Symbol used for formatting 
 STR_NOT_SUPPORTED		DC.W 		'NOT SUPPORTED', 0
+
+DISP_D					DC.W        'D', 0
+DISP_I					DC.W 		'I', 0
