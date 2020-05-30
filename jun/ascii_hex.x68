@@ -134,11 +134,3 @@ LOADING_ADDRESSES
     BRA         DERIVING_OPCODE	                        ; JSR to opcode.x68
 
 DONE
-    CLR.L D0
-    SIMHALT
-
-
-* START_ADDRESS DS.L 1
-* END_ADDR      DS.L 1
-
-

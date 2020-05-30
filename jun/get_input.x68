@@ -16,8 +16,8 @@ START_ADDR_PROMPT       ; Prompt user for starting address
     TRAP    #15         ; Stores string from keyboard to (A1)
                         ; it will also store the bit count in D1
 
-    JSR ASCII_2_HEX
-    * JSR MOVE_START_ADDR_REGISTER
+    BRA ASCII_2_HEX
+    
 
 END_ADDR_PROMPT
     CLR.L D0            ; Clear D0, for trap task num
@@ -37,9 +37,5 @@ END_ADDR_PROMPT
     TRAP    #15         ; Stores string from keyboard to (A1)
                         ; it will also store the bit count in D1
 
-    JSR ASCII_2_HEX
-    * JSR MOVE_END_ADDR_REGISTER
-
-    BRA DONE
-
-    * INCLUDE 'displays.x68'
+   BRA ASCII_2_HEX
+   

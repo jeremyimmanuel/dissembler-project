@@ -12,7 +12,6 @@
  * The address register 'A3' is used to represent the ending address
  * The data register 'D7' is used as the toggle for MOVEM '/' output 
  **
-BEGINNING_ADDRESS   DS.L 1
 BEGINNING_ADDRESS           EQU    $100 * This address in the memory will store the inputted user starting address
 FINISHING_ADDRESS           EQU    $150 * This address in the memory will store the inputted user ending address
 CURRENT_FOUR_NIBBLES_VAR    EQU    $200 * This variable will represent '4' nibbles which are used for reading purposes

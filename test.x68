@@ -1,14 +1,14 @@
     ORG    $9000
+
+START:
     MOVE.l A2,D2 ; $2411 (0011 010 000 010 001)
     MOVE.l D2,A2
     
         
-    MOVE.L      $AAAAAAAA, $55555555 
+    MOVE.L      $BBBBBBB, $2222222
     ADDI.B      #$42,D2  
-    ADDI.L      #$24422442,D3
-    ADDI.W      #$2442,D4
+
      
-    
     ADD.B       D0,D1
     ADD.W       D1,D0
     ADD.L       $00001234,D1
@@ -18,17 +18,14 @@
     ADD.B        #1,D5
     ADD.W        #10,D6
     ADDA        #5,A1
-    ADDA.W      $0001234,A2
-    ADDA.L      $FFFF1234,A0
     MOVE.L      $AAAAAAAA, $55555555
     ADDI        #10,D4
     SUBI        #10,D4
     CMPI        #3,D3
     ANDI        #4,D6
-    ORI.L       #4090900909,D5
+    ORI.B       #$0A,D5
     MOVE.L      #4090900909,D5
     OR.L        #4090900909,D5
-    EORI.L      #4090900909,D5
 
     LEA         $3333+24,A4
     LEA         $FFFFFFF,A5
@@ -97,8 +94,7 @@
     MULS        #45,D1
     MULS        $00001234,D7
     MULS        $FFFF1000, D2  
-*DIVU
-    
+
     SIMHALT
     EOR.B #5,D2
     
@@ -177,3 +173,5 @@ TEST
 NO_TEST
     MOVE.W     #4,D2
     RTS
+
+    END START
