@@ -2357,7 +2357,7 @@ FIRST_TWO_NIBS_4_E
     LSL         #8,D3                       * Shift to the left to remove the 2 Most Sig Nibbles 
     LSR         #8,D3                       * Return to the original position of those bits. 
     CMP.B       #$71,D3                     * Checks for NOP since it's only 4E71
-    BEQ         OUTPUT_NOP
+    BEQ         INVALID_OPCODE
     CMP.B       #$75,D3                     * Checks for RTS since it's only 4E75
     BEQ         OUTPUT_RTS
     MOVE.W      CURRENT_FOUR_NIBBLES_VAR,D3	* Reload the current four nibbles that 
@@ -2502,7 +2502,7 @@ FIRST_NIB_4
     CMP.B       #$E,D3						* Checks to see if it's 4EXX 
     BEQ         FIRST_TWO_NIBS_4_E          * If it is then it can only be NOP,RTS,JSR
     CMP.B       #6,D3                       * If the second nibble is 6, then it must be NOT
-    BEQ         OUTPUT_NOT					* So print out NOT 
+    BEQ         INVALID_OPCODE			    * So print out NOT 
     MOVE.W      CURRENT_FOUR_NIBBLES_VAR,D3	* Reload the current four nibbles that 
 											* the disassembler is looking at to D3
 											* NOTE: At this stage D3 serves as a copy 
