@@ -486,6 +486,54 @@ OUTPUT_CMPI
 											 * it to see if it's an OpCode.
     RTS										 * Return to the subroutine
 
+
+OUTPUT_ADDI
+    LEA         STR_DATA,A1                  * Loads the string for CMPI for output
+    JSR         WHOLE_MESSAGE_OUTPUT		* Prints the string loaded in A1         * Prints the string loaded in A1
+    LEA         STR_NOT_SUPPORTED, A1
+    JSR         WHOLE_MESSAGE_OUTPUT
+    MOVE.W      CURRENT_FOUR_NIBBLES_VAR,D3	 * Reload the current four nibbles that 
+											
+											 
+    JSR         UPDATE_DEST_SRC_VAR			* This subroutine will update the Destination Source Variable. 			 * This subroutine will update the 
+											 * Destination Source Variable
+											 
+    JSR         SUFFIX_OUTPUT_JMP			 * Jumps to the SUFFIX_OUTPUT_JMP to determine
+											 * the appropriate suffix for print out.
+											 
+    * JSR         OUTPUT_EMPTY_SPACE			* Invokes subroutine to print a space           * Invokes subroutine to print a space 
+    * JSR         OUTPUT_EA_IMMI_DATA_SYMBOL	* Outputs the '#' symbol	 * Outputs the '#' symbol 
+    JSR         D3_STORE_NORM_SIZE           * Jumps to the subroutine that will 
+											
+    
+	LSR         #1, D3                       * In thise case CMPI.B and CMPI.W 
+											 * will map to (xxx).S so the print out should only be for 4
+											 
+    MOVE.W      D3, UTILITY_VAR				 * Moves the value stored in D3 to the temporary variable. 
+	
+    JSR         UPDATE_DEST_SRC_VAR			* This subroutine will update the Destination Source Variable.           * This subroutine will update the 
+											 * Destination Source Variable. In this case now the
+											 * byte and word sizes will be printing out 4 spaces 
+											 * whereas a long size will print out 5 spaces. 
+											 
+    JSR         REG_MODE_111                 * Jumps to the REG_MODE_111 subroutine 
+											 * This will precipitate the output of the immediate value
+											 
+    * JSR         OUTPUT_COMMA				* This invokes a subroutine that will output a comma				 * This invokes a subroutine that will output a comma
+    * JSR         OUTPUT_EMPTY_SPACE			* Invokes subroutine to print a space			 * Invokes subroutine to print a space 
+    * JSR         OUTPUT_DATA_MODE_SOURCE		* This subroutine will output the data mode source.		 * This subroutine will output the data
+	* 										 * data mode source.
+											 
+    BSR         PRESS_ENTER_CHECK			* Branch to the PRESS_ENTER_CHECK subroutine to see if a new screen of more output is ready. 			 * Branch to the PRESS_ENTER_CHECK 
+											 * subroutine to see if a new screen
+											 * of more output is ready. 
+											 
+    BRA         DERIVING_OPCODE				* Branch to the subroutine for checking the next word and parsing it to see if it's an OpCode.				 * Branch to the subroutine for 
+										     * checking the next word and parsing
+											 * it to see if it's an OpCode.
+    RTS										 * Return to the subroutine
+    
+
 ******
  * The SPECIAL_SUFFIX_OUTPUT_JMP subroutine: 
  * --------------------------------------
@@ -2378,6 +2426,8 @@ FIRST_NIB_0
     JSR         STORE_SECOND_NIBBLE_IN_D3   * This instruction is a jump to a subroutine designed specifically for getting the second nibble 
     CMP         #$C, D3						* Check to see if second nibbles is #$C 
     BEQ         OUTPUT_CMPI					* If it is then it's CMPI 
+    CMP         #$6, D3
+    BEQ         OUTPUT_ADDI
     BRA         INVALID_OPCODE				* We don't support other opcodes here so branch to invalid 
     RTS
 

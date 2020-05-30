@@ -24,7 +24,20 @@ STR_LSLm                     DC.W 'LSLm', 0
 STR_LSLr                     DC.W 'LSLr', 0
 STR_ASRm                     DC.W 'ASRm', 0
 STR_ASRr                     DC.W 'ASRr', 0
-                
+
+STR_OPEN_BRACK         	DC.W        '(',0		* Symbol used for formatting 
+STR_CLOSE_BRACK         DC.W        ')',0		* Symbol used for formatting 
+MOVEM_SLASH             DC.W        '/',0		* Symbol used for formatting 
+STR_PLUS               	DC.W        '+',0		* Symbol used for formatting 
+STR_MINUS              	DC.W        '-',0		* Symbol used for formatting 
+STR_DATA_REG           	DC.W        'D',0		* Symbol used for formatting 
+STR_ADDR_REG        	DC.W        'A',0		* Symbol used for formatting 
+STR_COMMA               DC.W        ',',0		* Symbol used for formatting 
+STR_SPACE               DC.W        ' ',0		* Symbol used for formatting 
+STR_BIN_SYMBOL          DC.W        '%',0		* Symbol used for formatting 
+STR_HEX_SYMBOL          DC.W        '$',0		* Symbol used for formatting 
+EA_IMMI_DATA_SYMBOL   	DC.W        '#',0		* Symbol used for formatting 
+
 * Data size                
 STR_BYTE                    DC.W '.B ', 0
 STR_WORD                    DC.W '.W ', 0

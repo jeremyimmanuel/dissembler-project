@@ -60,6 +60,7 @@ EA_IMMI_DATA_SYMBOL   	DC.W        '#',0		* Symbol used for formatting
 STR_BYTE_SUFFIX         DC.W        '.B',0		* Symbol used for formatting 
 STR_WORD_SUFFIX         DC.W        '.W',0		* Symbol used for formatting 
 STR_LONG_SUFFIX         DC.W        '.L',0		* Symbol used for formatting 
+
 STR_ZERO                DC.W        '0',0		* Symbol used for formatting 
 STR_ONE                 DC.W        '1',0		* Symbol used for formatting 
 STR_TWO                 DC.W        '2',0		* Symbol used for formatting 
@@ -70,9 +71,11 @@ STR_SIX                 DC.W        '6',0		* Symbol used for formatting
 STR_SEVEN               DC.W        '7',0		* Symbol used for formatting 
 STR_EIGHT               DC.W        '8',0		* Symbol used for formatting 
 STR_NINE                DC.W        '9',0		* Symbol used for formatting 
+
 STR_A                   DC.W        'A',0		* Symbol used for formatting 
 STR_B                   DC.W        'B',0		* Symbol used for formatting 
 STR_C                   DC.W        'C',0		* Symbol used for formatting 
 STR_D                   DC.W        'D',0		* Symbol used for formatting		 
 STR_E                   DC.W        'E',0		* Symbol used for formatting 
 STR_F                   DC.W        'F',0		* Symbol used for formatting 
+STR_NOT_SUPPORTED		DC.W 		'NOT SUPPORTED', 0
