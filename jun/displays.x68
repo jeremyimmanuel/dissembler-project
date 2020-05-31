@@ -20,10 +20,14 @@ DISP_START_ADDR_PROMPT
 * * * * * * * * * * *
 * TODO - Implement  *
 * * * * * * * * * * *
-DISP_Current_Addr
-    MOVEA.L #0, A1      ; Clear A1
-    MOVEA.L A2, A1  ; Display promp for starting address
-    JSR TRAP14
+OUTPUT_ADDR_LOC
+    MOVE.L      A2,D5 							* Store the current address that the disassembler is at					
+    MOVE.L      D5,CURR_NIBBLES_MEM_LOC     * Copy the long address in its entirety 
+    JSR         HEX_2_ASCII			        * Output the 8 bit data field
+    MOVE.W      A2,D5							* Store the current address that the disassembler is at
+    MOVE.W      D5,CURR_NIBBLES_MEM_LOC		* Copy the long address in its entirety 
+    JSR         HEX_2_ASCII		        * Output the 8 bit data field
+    JSR         DISP_STR_SPACE			* Invokes subroutine to print a space
     RTS
 
 DISP_INVALID_ADDRESS_ERROR

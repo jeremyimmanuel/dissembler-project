@@ -1,14 +1,4 @@
 * MOVE_EA
-
-OUTPUT_ADDR_LOC
-    MOVE.L      A2,D5 							* Store the current address that the disassembler is at					
-    MOVE.L      D5,CURR_NIBBLES_MEM_LOC     * Copy the long address in its entirety 
-    JSR         HEX_2_ASCII			* Output the 8 bit data field
-    MOVE.W      A2,D5							* Store the current address that the disassembler is at
-    MOVE.W      D5,CURR_NIBBLES_MEM_LOC		* Copy the long address in its entirety 
-    JSR         HEX_2_ASCII		* Output the 8 bit data field
-    JSR         DISP_STR_SPACE			* Invokes subroutine to print a space
-    RTS
     
 Destination_Mode
     MOVEM.L D7, -(SP)
@@ -167,22 +157,25 @@ Imme_Data
     CMP.B   #$2, D5       * if equal to 3 that mean its Long because 10 is 2 in hex
     BEQ     Imme_Data_Long
 Imme_Data_Byte    
-    ADDA        #1, A2
-    MOVE.B      (A2)+, D1
-    MOVE.B      #3, D0
-    TRAP        #15
+    MOVE.W      (A2)+, D5
+    MOVE.W      D5, CURR_NIBBLES_MEM_LOC
+    JSR         HEX_2_ASCII
     RTS
 Imme_Data_Word
-    MOVE.W      (A2)+, D1
-    MOVE.B       #3, D0
-    TRAP        #15
+    MOVE.W      (A2)+, D5
+    MOVE.W      D5, CURR_NIBBLES_MEM_LOC
+    JSR         HEX_2_ASCII
     RTS
 Imme_Data_Long
-    MOVE.L      (A2)+, D1
-    MOVE.B       #3, D0
-    TRAP        #15
+    MOVE.L      (A2)+, D5
+    MOVE.L      D5, CURR_NIBBLES_MEM_LOC
+    JSR         HEX_2_ASCII
+    MOVE.W      D5, CURR_NIBBLES_MEM_LOC
+    JSR         HEX_2_ASCII
     RTS
-
+*    move.w #$4210, D5
+*    move.w d5, CURR_NIBBLES_MEM_LOC
+*    JSR         HEX_2_ASCII
 Print_Num
     CMP.B   #$0, D6
     BEQ     Print_0
