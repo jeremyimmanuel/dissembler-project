@@ -17,6 +17,7 @@ start		EQU	$00009000	* ORG and END address
 		ORG	start
 
     MOVE.B    D0,D1
+    MOVE.B    D0,D1
     SIMHALT             ; halt simulator
 
 * Put variables and constants here

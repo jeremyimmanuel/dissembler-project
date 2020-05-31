@@ -18,7 +18,6 @@
 ASCII_TO_HEX_CHANGER
     LSL.L   #4, D3          ; Shifting one hexabit at holder
     MOVE.B (A1)+, D0        ; move to register to save time
-          
 
 NUMBER_CHECK    
     CMP.B   #'0', D0          ; if less than 0, error
@@ -77,34 +76,34 @@ VALIDATING_BEG_ADDRESS              ;VALIDATE_START_ADDR
 
 VALIDATING_FINISH_ADDRESS                       ; VALIDATING_FINISH_ADDRESS
     BTST        #0,D3                           ; if equal then even
-    BNE         HANDLING_INVALID_FINISH_ADDR                ; if not equal then odd; error
+    BNE         HANDLING_INVALID_FINISH_ADDR    ; if not equal then odd; error
     
     CMP.L       START_ADDR_MEM_LOC, D3          ; check if starting address is less than or equal to ending address
-    BLE         HANDLING_INVALID_FINISH_ADDR                ; if yes, then error because start < end
+    BLE         HANDLING_INVALID_FINISH_ADDR    ; if yes, then error because start < end
     
     CLR.W       D2                              ; Clear D2
     JSR         MOVE_END_ADDR_REGISTER          ; Move our ending address in D3 to defined 
                                                 ; memory location
     CLR.W       D3	                            ; Clear D3
     
-   * LEA         STR_SPACE, A1                   ;
+   * LEA         STR_SPACE, A1                  
     * MOVE.B      #13,D0	
     * TRAP        #15
     BRA         LOADING_ADDRESSES
 
-HANDLING_INVALID_BEG_ADDR     ; HANDLING_INVALID_START_ADDR
-    MOVEA.L     #0, A1                           ; Clear A1
+HANDLING_INVALID_BEG_ADDR                       ; HANDLING_INVALID_START_ADDR
+    MOVEA.L     #0, A1                          ; Clear A1
     LEA         Error_Message, A1               ; Load error message
-    MOVE.B      #13, D0                          ; Trap task #13
+    MOVE.B      #13, D0                         ; Trap task #13
     TRAP        #15	
     CLR         D3                              ; Clear D3
-    BRA         GET_BEGIN_ADDR               ; Ask for starting address again
+    BRA         GET_BEGIN_ADDR                  ; Ask for starting address again
   
 
-HANDLING_INVALID_FINISH_ADDR        ; HANDLING_INVALID_FINISH_ADDR
-    MOVEA.L     #0, A1                           ; Clear A1
-    LEA         Error_Message, A1	* Loads the message about bad input to A1
-    MOVE.B      #13, D0				* Preps the TRAP TASK #13
+HANDLING_INVALID_FINISH_ADDR                    ; HANDLING_INVALID_FINISH_ADDR
+    MOVEA.L     #0, A1                          ; Clear A1
+    LEA         Error_Message, A1	            * Loads the message about bad input to A1
+    MOVE.B      #13, D0				            * Preps the TRAP TASK #13
     TRAP        #15	             
     
     CLR         D3	
@@ -112,13 +111,11 @@ HANDLING_INVALID_FINISH_ADDR        ; HANDLING_INVALID_FINISH_ADDR
 
 
 SWITCH_BAD_INPUT
-    CMP         #1, D2				* Checks the D2 register to see if 
-									* the starting address has already
-									* been verified.
-    BEQ         HANDLING_INVALID_FINISH_ADDR * If it's equal to 1 then  										 * must have been invalid. 
-    BRA         HANDLING_INVALID_BEG_ADDR	* If it's 0 then beginning address was wrong. 
+    CMP         #1, D2				            * Checks the D2 register to see if the starting address has already been verified.
+    BEQ         HANDLING_INVALID_FINISH_ADDR 
+    BRA         HANDLING_INVALID_BEG_ADDR	    * If it's 0 then beginning address was wrong. 
 
 LOADING_ADDRESSES
     MOVE.L      START_ADDR_MEM_LOC, A2
     MOVE.L      END_ADDR_MEM_LOC, A3
-    JSR         PARSE_START	                        ; JSR to opcode.x68
+    JSR         Loop                     ; JSR to opcode.x68

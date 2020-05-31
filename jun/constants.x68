@@ -31,7 +31,7 @@ Str_Addr_Reg        	    DC.W    'A', 0
 Str_Comma_Symbol            DC.W    ',', 0  
 Str_Bin_Symbol              DC.W    '%', 0  
 Str_Hex_Symbol              DC.W    '$', 0  
-Str_Imme_Data_Symbol   	    DC.W    '#', 0  
+Str_Hashtag_Symbol   	    DC.W    '#', 0  
 
 * Data size                
 Str_BYTE                    DC.W '.B ', 0
