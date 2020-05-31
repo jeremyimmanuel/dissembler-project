@@ -63,12 +63,12 @@ MOVE_END_ADDR_REGISTER
     RTS
 
 VALIDATING_BEG_ADDRESS              ;VALIDATE_START_ADDR
-    BTST        #0,D3                           ; Check if even number
-    BNE         HANDLING_INVALID_BEG_ADDR      ; if not equal -> odd number; error
-    
     CMP         #1,D2  
     BEQ         VALIDATING_FINISH_ADDRESS        ; If D2 is 1 then we already validated START_ADDRESS          
     ADDI        #1,D2                           ; if initially 0 then we add 1 to toggle it to Validate End Addr
+
+    BTST        #0,D3                           ; Check if even number
+    BNE         HANDLING_INVALID_BEG_ADDR      ; if not equal -> odd number; error
     
     JSR         MOVE_START_ADDR_REGISTER        ; MOVE starting address we converted in D3
                                                 ; to the defined memory location

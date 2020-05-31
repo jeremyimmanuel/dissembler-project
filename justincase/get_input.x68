@@ -11,6 +11,8 @@ GET_BEGIN_ADDR       ; Prompt user for starting address
     TRAP    #15         ; Stores string from keyboard to (A1)
                         ; it will also store the bit count in D1
 
+    CLR     D2          ; clear starting/ending address toggle 
+
     BRA ASCII_TO_HEX_CHANGER
 
 GET_FINISH_ADDR
