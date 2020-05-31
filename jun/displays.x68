@@ -120,10 +120,220 @@ DISP_STR_ASRr
     JSR TRAP14
     RTS
 
+********************* Dn *********************
+DISP_STR_D0
+    MOVEA.L #0, A1
+    LEA Str_D0, A1
+    JSR TRAP14
+    RTS
+DISP_STR_D1
+    MOVEA.L #0, A1
+    LEA Str_D1, A1
+    JSR TRAP14
+    RTS
+DISP_STR_D2
+    MOVEA.L #0, A1
+    LEA Str_D2, A1
+    JSR TRAP14
+    RTS
+DISP_STR_D3
+    MOVEA.L #0, A1
+    LEA Str_D3, A1
+    JSR TRAP14
+    RTS
+DISP_STR_D4
+    MOVEA.L #0, A1
+    LEA Str_D4, A1
+    JSR TRAP14
+    RTS
+DISP_STR_D5
+    MOVEA.L #0, A1
+    LEA Str_D5, A1
+    JSR TRAP14
+    RTS
+DISP_STR_D6
+    MOVEA.L #0, A1
+    LEA Str_D6, A1
+    JSR TRAP14
+    RTS
+DISP_STR_D7
+    MOVEA.L #0, A1
+    LEA Str_D7, A1
+    JSR TRAP14
+    RTS
+
+********************* An *********************
+DISP_STR_A0
+    MOVEA.L #0, A1
+    LEA Str_A0, A1
+    JSR TRAP14
+    RTS
+DISP_STR_A1
+    MOVEA.L #0, A1
+    LEA Str_A1, A1
+    JSR TRAP14
+    RTS
+DISP_STR_A2
+    MOVEA.L #0, A1
+    LEA Str_A2, A1
+    JSR TRAP14
+    RTS
+DISP_STR_A3
+    MOVEA.L #0, A1
+    LEA Str_A3, A1
+    JSR TRAP14
+    RTS
+DISP_STR_A4
+    MOVEA.L #0, A1
+    LEA Str_A4, A1
+    JSR TRAP14
+    RTS
+DISP_STR_A5
+    MOVEA.L #0, A1
+    LEA Str_A5, A1
+    JSR TRAP14
+    RTS
+DISP_STR_A6
+    MOVEA.L #0, A1
+    LEA Str_A6, A1
+    JSR TRAP14
+    RTS
+DISP_STR_A7
+    MOVEA.L #0, A1
+    LEA Str_A7, A1
+    JSR TRAP14
+    RTS
+
+********************* (An) *********************
+DISP_STR_INDR_A0
+    MOVEA.L #0, A1
+    LEA Str_Indr_A0, A1
+    JSR TRAP14
+    RTS
+DISP_STR_INDR_A1
+    MOVEA.L #0, A1
+    LEA Str_Indr_A1, A1
+    JSR TRAP14
+    RTS
+DISP_STR_INDR_A2
+    MOVEA.L #0, A1
+    LEA Str_Indr_A2, A1
+    JSR TRAP14
+    RTS
+DISP_STR_INDR_A3
+    MOVEA.L #0, A1
+    LEA Str_Indr_A3, A1
+    JSR TRAP14
+    RTS
+DISP_STR_INDR_A4
+    MOVEA.L #0, A1
+    LEA Str_Indr_A4, A1
+    JSR TRAP14
+    RTS
+DISP_STR_INDR_A5
+    MOVEA.L #0, A1
+    LEA Str_Indr_A5, A1
+    JSR TRAP14
+    RTS
+DISP_STR_INDR_A6
+    MOVEA.L #0, A1
+    LEA Str_Indr_A6, A1
+    JSR TRAP14
+    RTS
+DISP_STR_INDR_A7
+    MOVEA.L #0, A1
+    LEA Str_Indr_A7, A1
+    JSR TRAP14
+    RTS
+
+********************* (An)+ *********************
+DISP_STR_PLUS_INDR_A0
+    MOVEA.L #0, A1
+    LEA Str_PlusIndr_A0, A1
+    JSR TRAP14
+    RTS
+DISP_STR_PLUS_INDR_A1
+    MOVEA.L #0, A1
+    LEA Str_PlusIndr_A1, A1
+    JSR TRAP14
+    RTS
+DISP_STR_PLUS_INDR_A2
+    MOVEA.L #0, A1
+    LEA Str_PlusIndr_A2, A1
+    JSR TRAP14
+    RTS
+DISP_STR_PLUS_INDR_A3
+    MOVEA.L #0, A1
+    LEA Str_PlusIndr_A3, A1
+    JSR TRAP14
+    RTS
+DISP_STR_PLUS_INDR_A4
+    MOVEA.L #0, A1
+    LEA Str_PlusIndr_A4, A1
+    JSR TRAP14
+    RTS
+DISP_STR_PLUS_INDR_A5
+    MOVEA.L #0, A1
+    LEA Str_PlusIndr_A5, A1
+    JSR TRAP14
+    RTS
+DISP_STR_PLUS_INDR_A6
+    MOVEA.L #0, A1
+    LEA Str_PlusIndr_A6, A1
+    JSR TRAP14
+    RTS
+DISP_STR_PLUS_INDR_A7
+    MOVEA.L #0, A1
+    LEA Str_PlusIndr_A7, A1
+    JSR TRAP14
+    RTS
+
+
+********************* -(An) *********************
+DISP_STR_MINUS_INDR_A0
+    MOVEA.L #0, A1
+    LEA Str_MinusIndr_A0, A1
+    JSR TRAP14
+    RTS
+DISP_STR_MINUS_INDR_A1
+    MOVEA.L #0, A1
+    LEA Str_MinusIndr_A1, A1
+    JSR TRAP14
+    RTS
+DISP_STR_MINUS_INDR_A2
+    MOVEA.L #0, A1
+    LEA Str_MinusIndr_A2, A1
+    JSR TRAP14
+    RTS
+DISP_STR_MINUS_INDR_A3
+    MOVEA.L #0, A1
+    LEA Str_MinusIndr_A3, A1
+    JSR TRAP14
+    RTS
+DISP_STR_MINUS_INDR_A4
+    MOVEA.L #0, A1
+    LEA Str_MinusIndr_A4, A1
+    JSR TRAP14
+    RTS
+DISP_STR_MINUS_INDR_A5
+    MOVEA.L #0, A1
+    LEA Str_MinusIndr_A5, A1
+    JSR TRAP14
+    RTS
+DISP_STR_MINUS_INDR_A6
+    MOVEA.L #0, A1
+    LEA Str_MinusIndr_A6, A1
+    JSR TRAP14
+    RTS
+DISP_STR_MINUS_INDR_A7
+    MOVEA.L #0, A1
+    LEA Str_MinusIndr_A7, A1
+    JSR TRAP14
+    RTS
 ******************************************
 DISP_STR_COMMA
     MOVEA.L #0, A1
-    LEA STR_COMMA, A1
+    LEA Str_Comma_Symbol, A1
     JSR TRAP14
     RTS
 

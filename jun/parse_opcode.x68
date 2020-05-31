@@ -1,42 +1,42 @@
 * Read one word from memory at a time and store it in D7.
 * D7 is gonna be the primary storage for data(opcode) retrieved from memory.
 Parse_Start
-    MOVE.W #$3E3C, D7   *Testing for MOVE
+    MOVE.W #$3801, D7   *Testing for MOVE
     JSR Search_Opcode
-    MOVE.W #$327C, D7   *Testing for MOVEA
-    JSR Search_Opcode
-    MOVE.W #$48A1, D7   *Testing for MOVEM
-    JSR Search_Opcode
-    MOVE.W #$41D0, D7   *Testing for LEA
-    JSR Search_Opcode
-    MOVE.W #$4E92, D7   *Testing for JSR
-    JSR Search_Opcode
-    MOVE.W #$4E75, D7   *Testing for RTS
-    JSR Search_Opcode
-    MOVE.W #$6450, D7   *Testing for BCC
-    JSR Search_Opcode
-    MOVE.W #$6E00, D7   *Testing for BGT
-    JSR Search_Opcode
-    MOVE.W #$6F00, D7   *Testing for BLE
-    JSR Search_Opcode
-    MOVE.W #$8401, D7   *Testing for OR
-    JSR Search_Opcode
-    MOVE.W #$9249, D7   *Testing for SUB
-    JSR Search_Opcode
-    MOVE.W #$B200, D7   *Testing for CMP
-    JSR Search_Opcode
-    MOVE.W #$C338, D7   *Testing for AND
-    JSR Search_Opcode
-    MOVE.W #$D401, D7   *Testing for ADD
-    JSR Search_Opcode
-    MOVE.W #$E3F8, D7   *Testing for LSLm
-    JSR Search_Opcode
-    MOVE.W #$E54A, D7   *Testing for LSLr
-    JSR Search_Opcode
-    MOVE.W #$E0F8, D7   *Testing for ASRm
-    JSR Search_Opcode
-    MOVE.W #$E442, D7   *Testing for ASRr
-    JSR Search_Opcode
+    * MOVE.W #$327C, D7   *Testing for MOVEA
+    * JSR Search_Opcode
+    * MOVE.W #$48A1, D7   *Testing for MOVEM
+    * JSR Search_Opcode
+    * MOVE.W #$41D0, D7   *Testing for LEA
+    * JSR Search_Opcode
+    * MOVE.W #$4E92, D7   *Testing for JSR
+    * JSR Search_Opcode
+    * MOVE.W #$4E75, D7   *Testing for RTS
+    * JSR Search_Opcode
+    * MOVE.W #$6450, D7   *Testing for BCC
+    * JSR Search_Opcode
+    * MOVE.W #$6E00, D7   *Testing for BGT
+    * JSR Search_Opcode
+    * MOVE.W #$6F00, D7   *Testing for BLE
+    * JSR Search_Opcode
+    * MOVE.W #$8401, D7   *Testing for OR
+    * JSR Search_Opcode
+    * MOVE.W #$9249, D7   *Testing for SUB
+    * JSR Search_Opcode
+    * MOVE.W #$B200, D7   *Testing for CMP
+    * JSR Search_Opcode
+    * MOVE.W #$C338, D7   *Testing for AND
+    * JSR Search_Opcode
+    * MOVE.W #$D401, D7   *Testing for ADD
+    * JSR Search_Opcode
+    * MOVE.W #$E3F8, D7   *Testing for LSLm
+    * JSR Search_Opcode
+    * MOVE.W #$E54A, D7   *Testing for LSLr
+    * JSR Search_Opcode
+    * MOVE.W #$E0F8, D7   *Testing for ASRm
+    * JSR Search_Opcode
+    * MOVE.W #$E442, D7   *Testing for ASRr
+    * JSR Search_Opcode
     
     JMP EXIT
 
@@ -75,7 +75,7 @@ Bit_Equal_0000          * two bit is 00~~, the opcode is either MOVE or MOVEA
     LSR.W #5, D7
     MOVE.B D7, D6
     MOVEM.L (SP)+, D7
-    CMP.B #$1, D6
+    CMP.B #$1, D6       * if the destination mode is 1 then it is MOVEA
     BEQ Print_MOVEA
     BNE Print_MOVE
 
@@ -111,7 +111,6 @@ Bit_Equal_0110            * nibble is 0110, the opcode is either BCC, BGT, or BL
     BEQ Print_BGT
     CMP.B #$F, D6
     BEQ Print_BLE
-
 
 Bit_Equal_1000            * nibble is 1000, the opcode is OR
     BRA Print_OR
@@ -151,20 +150,34 @@ Get_Size_For_Move_Movea   * Now check the size (bit-13 to bit-12)
     LSR.W #6, D7
     MOVE.B D7, D6
     MOVEM.L (SP)+, D7 
-    CMP.B #$3, D6       * if equal to 3 that mean its word because 11 is 3 in hex
+    CMP.B #$1, D6       * if equal to 3 that mean its Byte because 01 is 1 in hex
     BEQ Print_Size_Byte
+    CMP.B #$3, D6       * if equal to 3 that mean its Word because 11 is 3 in hex
+    BEQ Print_Size_Word
+    CMP.B #$2, D6       * if equal to 3 that mean its Long because 10 is 2 in hex
+    BEQ Print_Size_Long
+    BNE Print_Error
 
 Print_Size_Byte
     JSR DISP_STR_BYTE
-    JSR DISP_NEW_LINE
+    JSR Source_Mode
+    JSR DISP_STR_COMMA
+    JSR DISP_STR_SPACE
+    JSR Destination_Mode
     RTS
 Print_Size_Word
     JSR DISP_STR_WORD
-    JSR DISP_NEW_LINE
+    JSR Source_Mode
+    JSR DISP_STR_COMMA
+    JSR DISP_STR_SPACE
+    JSR Destination_Mode
     RTS
 Print_Size_Long
     JSR DISP_STR_LONG
-    JSR DISP_NEW_LINE
+    JSR Source_Mode
+    JSR DISP_STR_COMMA
+    JSR DISP_STR_SPACE
+    JSR Destination_Mode
     RTS
 
 Print_MOVE
@@ -238,5 +251,10 @@ Print_ASRm
     RTS        
 Print_ASRr
     JSR DISP_STR_ASRr
+    JSR DISP_NEW_LINE
+    RTS
+
+Print_Error
+    JSR DISP_ERROR_MESSAGE
     JSR DISP_NEW_LINE
     RTS
