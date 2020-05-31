@@ -1,10 +1,13 @@
 * Read one word from memory at a time and store it in D7.
 * D7 is gonna be the primary storage for data(opcode) retrieved from memory.
+
+
 LOOP
     CMPA.L A2, A3
     BGE EXIT
 
 Parse_Start
+    JSR OUTPUT_ADDR_LOC
     MOVE.W (A2)+, D7   *Testing for MOVE
     JSR Search_Opcode
     * MOVE.W #$327C, D7   *Testing for MOVEA
@@ -41,6 +44,7 @@ Parse_Start
     * JSR Search_Opcode
     * MOVE.W #$E442, D7   *Testing for ASRr
     * JSR Search_Opcode
+   
     
     JMP EXIT
 
