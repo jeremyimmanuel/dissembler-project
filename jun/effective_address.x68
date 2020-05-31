@@ -1,5 +1,15 @@
 * MOVE_EA
 
+OUTPUT_ADDR_LOC
+    MOVE.L      A2,D5 							* Store the current address that the disassembler is at					
+    MOVE.L      D5,CURR_NIBBLES_MEM_LOC     * Copy the long address in its entirety 
+    JSR         HEX_2_ASCII			* Output the 8 bit data field
+    MOVE.W      A2,D5							* Store the current address that the disassembler is at
+    MOVE.W      D5,CURR_NIBBLES_MEM_LOC		* Copy the long address in its entirety 
+    JSR         HEX_2_ASCII		* Output the 8 bit data field
+    JSR         DISP_STR_SPACE			* Invokes subroutine to print a space
+    RTS
+    
 Destination_Mode
     MOVEM.L D7, -(SP)
     LSL.W #7, D7

@@ -1,11 +1,13 @@
 * Read one word from memory at a time and store it in D7.
 * D7 is gonna be the primary storage for data(opcode) retrieved from memory.
+
 * D5 is gonan be the size like .B, .W, .L
 Loop
     CMPA.L A3, A2
     BGE EXIT
 
 Parse_Start
+    JSR OUTPUT_ADDR_LOC
     MOVE.W (A2)+, D7   *Testing for MOVE
     * JSR DISP_Current_Addr
     JSR Search_Opcode
