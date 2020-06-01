@@ -4,7 +4,7 @@
 * D5 is gonan be the size like .B, .W, .L
 Loop
     CMPA.L  A3, A2
-    BGE     EXIT
+    BGE     Prompt_Exit_or_Restart
 
 Parse_Start
     BSR     Check_Full_Screen

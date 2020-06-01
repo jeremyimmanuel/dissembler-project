@@ -78,3 +78,4 @@ Error_Message               DC.B 'Invalid Address exception, input was was not v
 Start_Addr_Instruction      DC.B 'Enter starting address (in hex, Capital letters and numbers only):', CR, LF, 0
 End_Addr_Instruction        DC.B 'Enter ending address (in hex, Capital letters and numbers only):', CR, LF, 0
 Press_Enter_Instruction     DC.B 'Press Enter to continue', 0
+Restart_Instruction         DC.B 'Please enter 0 to exit the program, or 1 to restart the program ', 0

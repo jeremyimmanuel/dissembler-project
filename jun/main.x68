@@ -27,6 +27,7 @@ START:
     INCLUDE 'constants.x68'
     INCLUDE 'displays.x68'
     INCLUDE 'effective_address.x68'
+    INCLUDE 'clean_up.x68'
     INCLUDE 'parse_opcode.x68'
 
 EXIT    MOVE.B      #9, D0 
