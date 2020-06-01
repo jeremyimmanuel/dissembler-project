@@ -61,6 +61,15 @@ New_Line                    DC.B CR,LF, 0
 Str_Space                   DC.W ' ', 0
 Str_Empty                   DC.W '', 0
 
+Banner       DC.B    '************************************************************************',CR,LF     
+             DC.B    '*                        W E L C O M E ',CR,LF,CR,LF
+             DC.B    '*                            TO ',CR,LF,CR,LF
+             DC.B    '*                     D I S S A S E M B L E R ',CR,LF,CR,LF
+             DC.B    '*  TEAM: GROUP 1',CR,LF,CR,LF
+             DC.B    '*  TEAM MEMBERS: JEREMY TANDJUNG, ANGIE TSERENJAV, JUN ZHEN',CR,LF,CR,LF
+             DC.B    '************************************************************************',CR,LF,CR,LF,0
+
+
 * Error message
 Str_ERROR                   DC.L 'Invalid Opcode', 0
 Error_Message               DC.B 'Invalid Address exception, input was was not valid hex value', CR, LF, 0
@@ -68,3 +77,4 @@ Error_Message               DC.B 'Invalid Address exception, input was was not v
 * Prompts
 Start_Addr_Instruction      DC.B 'Enter starting address (in hex, Capital letters and numbers only):', CR, LF, 0
 End_Addr_Instruction        DC.B 'Enter ending address (in hex, Capital letters and numbers only):', CR, LF, 0
+Press_Enter_Instruction     DC.B 'Press Enter to continue', 0

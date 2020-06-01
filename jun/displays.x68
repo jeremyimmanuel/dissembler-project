@@ -11,19 +11,25 @@ TRAP14
     TRAP #15
     RTS
 
+DISP_BANNER
+    MOVEA.L #0, A1 
+    LEA Banner, A1
+    JSR TRAP14
+    RTS
+
 DISP_START_ADDR_PROMPT
     MOVEA.L #0, A1      ; Clear A1
     LEA     start_addr_instruction, A1  ; Display promp for starting address
     JSR TRAP14
     RTS
 
-PRESS_ENTER_CHECK
-    ADD         #1, D4					* D6 is used as the counter for number of 
+Check_Full_Screen
+    ADD         #1, D4					
 										* statements printed out. 
-    CMP         #30, D4 					* Since the screen is about 30 statements 
+    CMP         #31, D4 					* Since the screen is about 30 statements 
 										* in height, then this counter needs 
 										* to reach 30 before the user can press enter. 
-    BGE         PRESS_ENTER_CONT_CHECK	* If 30 has been reached let the user enter. 
+    BGE         Press_Enter_To_Continue	* If 30 has been reached let the user enter. 
     LEA         Str_Empty, A1			* If not then just print a string.
     MOVE        #14, D0					* Loads TRAP TASK #13
     TRAP        #15						* Execute TRAP TASK
@@ -37,7 +43,8 @@ PRESS_ENTER_CHECK
  * This will in turn allow the print out
  * of additional instructions to the screen.
  ****
-PRESS_ENTER_CONT_CHECK
+Press_Enter_To_Continue
+    JSR         DISP_PRESS_ENTER
     MOVE        #0, D4		* Reset the counter which is D6
     MOVE.B      #5, D0		* Load TRAP TASK #5	
     TRAP        #15			* Execute the TRAP TASK
@@ -64,6 +71,11 @@ DISP_INVALID_ADDRESS_ERROR
 
 DISP_NEW_LINE
     LEA NEW_LINE, A1                   
+    JSR TRAP14
+    RTS
+
+DISP_PRESS_ENTER
+    LEA Press_Enter_Instruction, A1
     JSR TRAP14
     RTS
 
