@@ -270,6 +270,12 @@ NOP
     JSR       label3
     RTS
 
+label1
+    RTS
+    LEA       $12,A0
+    LEA       $1234,A0
+    LEA       $12345678,A0
+
 * Put program code here
 
     SIMHALT             ; halt simulator

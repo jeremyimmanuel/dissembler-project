@@ -16,10 +16,8 @@ Str_CMP                     DC.W    'CMP', 0
 Str_AND                     DC.W    'AND', 0
 Str_ADD                     DC.W    'ADD', 0
 
-Str_LSLm                    DC.W   'LSLm', 0
-Str_LSLr                    DC.W   'LSLr', 0
-Str_ASRm                    DC.W   'ASRm', 0
-Str_ASRr                    DC.W   'ASRr', 0
+Str_LSL                    DC.W   'LSL', 0
+Str_ASR                    DC.W   'ASR', 0
 
 Str_Open_Brack_Symbol       DC.W    '(', 0  
 Str_Close_Brack_Symbol      DC.W    ')', 0  
@@ -47,68 +45,6 @@ Str_4                       DC.W '4', 0
 Str_5                       DC.W '5', 0
 Str_6                       DC.W '6', 0
 Str_7                       DC.W '7', 0
-Str_8                       DC.W '8', 0
-Str_9                       DC.W '9', 0
-
-* Dn
-Str_D0                       DC.W 'D0', 0
-Str_D1                       DC.W 'D1', 0
-Str_D2                       DC.W 'D2', 0
-Str_D3                       DC.W 'D3', 0
-Str_D4                       DC.W 'D4', 0
-Str_D5                       DC.W 'D5', 0
-Str_D6                       DC.W 'D6', 0
-Str_D7                       DC.W 'D7', 0
-Str_D8                       DC.W 'D8', 0
-Str_D9                       DC.W 'D9', 0
-
-* An
-Str_A0                       DC.W 'A0', 0
-Str_A1                       DC.W 'A1', 0
-Str_A2                       DC.W 'A2', 0
-Str_A3                       DC.W 'A3', 0
-Str_A4                       DC.W 'A4', 0
-Str_A5                       DC.W 'A5', 0
-Str_A6                       DC.W 'A6', 0
-Str_A7                       DC.W 'A7', 0
-Str_A8                       DC.W 'A8', 0
-Str_A9                       DC.W 'A9', 0
-
-* (An) 
-Str_Indr_A0                      DC.W '(A0)', 0
-Str_Indr_A1                      DC.W '(A1)', 0
-Str_Indr_A2                      DC.W '(A2)', 0
-Str_Indr_A3                      DC.W '(A3)', 0
-Str_Indr_A4                      DC.W '(A4)', 0
-Str_Indr_A5                      DC.W '(A5)', 0
-Str_Indr_A6                      DC.W '(A6)', 0
-Str_Indr_A7                      DC.W '(A7)', 0
-Str_Indr_A8                      DC.W '(A8)', 0
-Str_Indr_A9                      DC.W '(A9)', 0
-
-* (An)+
-Str_PlusIndr_A0                      DC.W '(A0)', 0
-Str_PlusIndr_A1                      DC.W '(A1)', 0
-Str_PlusIndr_A2                      DC.W '(A2)', 0
-Str_PlusIndr_A3                      DC.W '(A3)', 0
-Str_PlusIndr_A4                      DC.W '(A4)', 0
-Str_PlusIndr_A5                      DC.W '(A5)', 0
-Str_PlusIndr_A6                      DC.W '(A6)', 0
-Str_PlusIndr_A7                      DC.W '(A7)', 0
-Str_PlusIndr_A8                      DC.W '(A8)', 0
-Str_PlusIndr_A9                      DC.W '(A9)', 0
-
-* -(An) 
-Str_MinusIndr_A0                      DC.W '(A0)', 0
-Str_MinusIndr_A1                      DC.W '(A1)', 0
-Str_MinusIndr_A2                      DC.W '(A2)', 0
-Str_MinusIndr_A3                      DC.W '(A3)', 0
-Str_MinusIndr_A4                      DC.W '(A4)', 0
-Str_MinusIndr_A5                      DC.W '(A5)', 0
-Str_MinusIndr_A6                      DC.W '(A6)', 0
-Str_MinusIndr_A7                      DC.W '(A7)', 0
-Str_MinusIndr_A8                      DC.W '(A8)', 0
-Str_MinusIndr_A9                      DC.W '(A9)', 0
 
 * Letters                   
 Str_A                       DC.W 'A', 0

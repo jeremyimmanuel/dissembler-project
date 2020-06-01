@@ -22,8 +22,12 @@ Search_Opcode
     LSR.W   #4, D7
     MOVE.B  D7, D6
     MOVEM.L (SP)+, D7
+    CMP.B   #$1, D6
+    BEQ     Bit_Equal_0000 * MOVE, MOVEA
+    CMP.B   #$2, D6
+    BEQ     Bit_Equal_0000 * MOVE, MOVEA
     CMP.B   #$3, D6
-    BLE     Bit_Equal_0000 * MOVE, MOVEA
+    BEQ     Bit_Equal_0000 * MOVE, MOVEA
     CMP.B   #$4,D6  
     BEQ     Bit_Equal_0100 * MOVEM, LEA, JSR, RTS
     CMP.B   #$6,D6  
@@ -40,6 +44,7 @@ Search_Opcode
     BEQ     Bit_Equal_1101 * ADD
     CMP.B   #$E,D6  
     BEQ     Bit_Equal_1110 * LSLm, LSLr, ASRm,ASRr
+    BNE     Print_Error
 
 Bit_Equal_0000          * two bit is 00~~, the opcode is either MOVE or MOVEA
     JSR     Get_Bit8_to_Bit6
@@ -48,17 +53,23 @@ Bit_Equal_0000          * two bit is 00~~, the opcode is either MOVE or MOVEA
     BNE     Print_MOVE
 
 Bit_Equal_0100            * nibble is 0100, the opcode is either MOVEM, LEA, or JSR
-    MOVEM.L D7, -(SP)
-    LSL.W   #4, D7
-    LSR.W   #8, D7
-    LSR.W   #2, D7
-    MOVE.W  D7, D6
-    MOVEM.L (SP)+, D7
+    JSR     Get_Bit11_to_Bit6
     CMP.W   #$3A, D6
     BEQ     Print_JSR
     JSR     Get_Bit8_to_Bit6
     CMP.B   #$7, D6
     BEQ     Print_LEA
+    JSR     Get_Bit15_to_Bit8
+    CMP.B   #$4C, D6
+    BEQ     Print_MOVEM
+    CMP.B   #$48, D6
+    BEQ     Confirm_Movem
+    BNE     Print_Error
+
+Confirm_Movem
+    JSR     Get_Bit5_to_Bit3
+    CMP.B   #$0, D6
+    BEQ     Print_Error
     BNE     Print_MOVEM
 
 Bit_Equal_0110            * nibble is 0110, the opcode is either BCC, BGT, or BLE
@@ -91,20 +102,33 @@ Bit_Equal_1101            * nibble is 1101, the opcode is ADD
     BRA Print_ADD
 
 Bit_Equal_1110            * nibble is 1110, the opcode is either LSLm, LSLr, ASRm, or ASRr
-    MOVEM.L D7, -(SP) 
-    LSL.W   #7, D7
-    LSR.W   #8, D7
-    LSR.W   #5, D7
-    MOVE.B  D7, D6
-    MOVEM.L (SP)+, D7 
-    CMP.B   #$7,D6
+    JSR     Get_Bit11_to_Bit6
+    CMP.B   #$0F,D6
     BEQ     Print_LSLm
-    CMP.B   #$3,D6
+    CMP.B   #$03,D6
     BEQ     Print_ASRm
-    CMP.B   #$4,D6
-    BGE     Print_LSLr
-    CMP.B   #$2,D6
-    BLE     Print_ASRr
+    CMP.B   #$0B,D6
+    BEQ     Print_Error
+    CMP.B   #$07,D6
+    BEQ     Print_Error
+    JSR     Get_Bit4_to_Bit3
+    CMP.B   #$1, D6
+    BEQ     Check_Left_Only
+    CMP.B   #$0, D6
+    BEQ     Check_Right_Only
+    BNE     Print_Error
+
+Check_Left_Only
+    JSR     Get_Bit8
+    CMP.B   #$1, D6
+    BEQ     Print_LSLr
+    BNE     Print_Error
+
+Check_Right_Only
+    JSR     Get_Bit8
+    CMP.B   #$0, D6
+    BEQ     Print_ASRr
+    BNE     Print_Error
 
 Get_Size_For_Move_Movea   * Now check the size (bit-13 to bit-12)
     MOVEM.L D7, -(SP) 
@@ -121,40 +145,62 @@ Get_Size_For_Move_Movea   * Now check the size (bit-13 to bit-12)
     BEQ     Print_Size_Long
     BNE     Print_Error
 
-Print_Size_Byte
-    JSR     DISP_STR_BYTE
-    JSR     Source_Mode
-    JSR     DISP_STR_COMMA
-    JSR     DISP_STR_SPACE
-    JSR     Destination_Mode
-    JSR     DISP_NEW_LINE
-    RTS
-Print_Size_Word
-    JSR     DISP_STR_WORD
-    JSR     Source_Mode
-    JSR     DISP_STR_COMMA
-    JSR     DISP_STR_SPACE
-    JSR     Destination_Mode
-    JSR     DISP_NEW_LINE
-    RTS
-Print_Size_Long
-    JSR     DISP_STR_LONG
-    JSR     Source_Mode
-    JSR     DISP_STR_COMMA
-    JSR     DISP_STR_SPACE
-    JSR     Destination_Mode
-    JSR     DISP_NEW_LINE
-    RTS
+Get_Size_For_OR_SUB_CMP_AND_ADD  * Now check the size (bit-13 to bit-12)
+    JSR     Get_Bit8_to_Bit6
+    CMP.B   #$0, D6
+    BEQ     Print_Size_Byte
+    CMP.B   #$1, D6
+    BEQ     Print_Size_Word
+    CMP.B   #$2, D6
+    BEQ     Print_Size_Long
+    CMP.B   #$4, D6
+    BEQ     Print_Size_Byte
+    CMP.B   #$5, D6
+    BEQ     Print_Size_Word
+    CMP.B   #$6, D6
+    BEQ     Print_Size_Long
+    BNE     Print_Error
+
+Get_Size_For_LSL_ASR
+    JSR     Get_Bit7_to_Bit6
+    CMP.B   #$0, D6
+    BEQ     Print_Size_Byte
+    CMP.B   #$1, D6
+    BEQ     Print_Size_Word
+    CMP.B   #$2, D6
+    BEQ     Print_Size_Long
+    BNE     Print_Error
+
+Get_Size_For_MOVEM
+    JSR     Get_Bit6
+    CMP.B   #$0, D6
+    BEQ     Print_Size_Word
+    CMP.B   #$1, D6
+    BEQ     Print_Size_Long
+    BNE     Print_Error
 
 Print_MOVE
     JSR     DISP_STR_MOVE
-    JMP     Get_Size_For_Move_Movea
+    JSR     Get_Size_For_Move_Movea
+    JSR     Source_Mode
+    JSR     DISP_STR_COMMA
+    JSR     DISP_STR_SPACE
+    JSR     Destination_Mode
+    JSR     DISP_NEW_LINE
+    RTS
 Print_MOVEA
     JSR     DISP_STR_MOVEA
-    JMP     Get_Size_For_Move_Movea
-
+    JSR     Get_Size_For_Move_Movea
+    JSR     Source_Mode
+    JSR     DISP_STR_COMMA
+    JSR     DISP_STR_SPACE
+    JSR     Destination_Mode
+    JSR     DISP_NEW_LINE
+    RTS
 Print_MOVEM
     JSR     DISP_STR_MOVEM
+    JSR     Get_Size_For_MOVEM
+    JSR     Transfer_Direction
     JSR     DISP_NEW_LINE
     RTS
 Print_LEA
@@ -176,60 +222,111 @@ Print_RTS
     JSR     DISP_STR_RTS
     JSR     DISP_NEW_LINE
     RTS
-
 Print_BCC
     JSR     DISP_STR_BCC
+    JSR     Get_Bit7_to_Bit0
+    JSR     Check_Displacement
     JSR     DISP_NEW_LINE
     RTS    
 Print_BGT
     JSR     DISP_STR_BGT
+    JSR     Get_Bit7_to_Bit0
+    JSR     Check_Displacement
     JSR     DISP_NEW_LINE
     RTS
 Print_BLE
     JSR     DISP_STR_BLE
+    JSR     Get_Bit7_to_Bit0
+    JSR     Check_Displacement
     JSR     DISP_NEW_LINE
     RTS
 Print_OR
     JSR     DISP_STR_OR
+    JSR     Get_Size_For_OR_SUB_CMP_AND_ADD
     JSR     DISP_STR_SPACE
     JSR     Check_Opmode
     JSR     DISP_NEW_LINE
     RTS
 Print_SUB
     JSR     DISP_STR_SUB
+    JSR     Get_Size_For_OR_SUB_CMP_AND_ADD
+    JSR     DISP_STR_SPACE
+    JSR     Check_Opmode
     JSR     DISP_NEW_LINE
     RTS
 Print_CMP
     JSR     DISP_STR_CMP
+    JSR     Get_Size_For_OR_SUB_CMP_AND_ADD
+    JSR     DISP_STR_SPACE
+    JSR     Check_Opmode
     JSR     DISP_NEW_LINE
     RTS
 Print_AND
     JSR     DISP_STR_AND
+    JSR     Get_Size_For_OR_SUB_CMP_AND_ADD
+    JSR     DISP_STR_SPACE
+    JSR     Check_Opmode
     JSR     DISP_NEW_LINE
     RTS
 Print_ADD
     JSR     DISP_STR_ADD
+    JSR     Get_Size_For_OR_SUB_CMP_AND_ADD
+    JSR     DISP_STR_SPACE
+    JSR     Check_Opmode
     JSR     DISP_NEW_LINE
     RTS    
 Print_LSLm
-    JSR     DISP_STR_LSLm
+    JSR     DISP_STR_LSL
+    JSR     Print_Size_Word
+    JSR     Source_Mode
     JSR     DISP_NEW_LINE
     RTS
 Print_LSLr
-    JSR     DISP_STR_LSLr
+    JSR     DISP_STR_LSL
+    JSR     Get_Size_For_LSL_ASR
+    JSR     Check_Count_Or_Register
+    JSR     DISP_STR_COMMA
+    JSR     DISP_STR_SPACE
+    JSR     Print_DnSr
     JSR     DISP_NEW_LINE
     RTS
 Print_ASRm
-    JSR     DISP_STR_ASRm
+    JSR     DISP_STR_ASR
+    JSR     Print_Size_Word
+    JSR     Source_Mode
     JSR     DISP_NEW_LINE
     RTS        
 Print_ASRr
-    JSR     DISP_STR_ASRr
+    JSR     DISP_STR_ASR
+    JSR     Get_Size_For_LSL_ASR
+    JSR     Check_Count_Or_Register
+    JSR     DISP_STR_COMMA
+    JSR     DISP_STR_SPACE
+    JSR     Print_DnSr
     JSR     DISP_NEW_LINE
     RTS
 Print_Error
     JSR     DISP_ERROR_MESSAGE
     JSR     DISP_NEW_LINE
+    RTS
+Print_Size_Byte
+    JSR     DISP_STR_BYTE
+    RTS
+Print_Size_Word
+    JSR     DISP_STR_WORD
+    RTS
+Print_Size_Long
+    JSR     DISP_STR_LONG
+    RTS
+
+Get_Bit4_to_Bit3 
+    MOVEM.L D7, -(SP)
+    LSL.W   #8, D7
+    LSL.W   #3, D7
+    LSR.W   #8, D7
+    LSR.W   #6, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
     RTS
 
 Get_Bit5_to_Bit3
@@ -242,7 +339,7 @@ Get_Bit5_to_Bit3
     MOVEM.L (SP)+, D7
     RTS
 
-Get_Bit2_to_Bit0
+Get_Bit2_to_Bit0 * source register
     MOVEM.L D7, -(SP)
     LSL.W   #8, D7
     LSL.W   #5, D7
@@ -250,53 +347,189 @@ Get_Bit2_to_Bit0
     LSR.W   #5, D7
     MOVE.B  D7, D6
     MOVEM.L (SP)+, D7
+    RTS
 
-Get_Bit11_to_Bit9
-    MOVEM.L D7, -(SP)
-    LSL.W   #4, D7
-    LSR.W   #8, D7
-    LSR.W   #5, D7
-    MOVE.B  D7, D6
-    MOVEM.L (SP)+, D7
-
-Get_Bit8_to_Bit6
+Get_Bit8_to_Bit6 * destination mode
     MOVEM.L D7, -(SP)
     LSL.W   #7, D7
     LSR.W   #8, D7
     LSR.W   #5, D7
     MOVE.B  D7, D6
     MOVEM.L (SP)+, D7
-    * MOVE.W #$327C, D7   *Testing for MOVEA
-    * JSR Search_Opcode
-    * MOVE.W #$48A1, D7   *Testing for MOVEM
-    * JSR Search_Opcode
-    * MOVE.W #$41D0, D7   *Testing for LEA
-    * JSR Search_Opcode
-    * MOVE.W #$4E92, D7   *Testing for JSR
-    * JSR Search_Opcode
-    * MOVE.W #$4E75, D7   *Testing for RTS
-    * JSR Search_Opcode
-    * MOVE.W #$6450, D7   *Testing for BCC
-    * JSR Search_Opcode
-    * MOVE.W #$6E00, D7   *Testing for BGT
-    * JSR Search_Opcode
-    * MOVE.W #$6F00, D7   *Testing for BLE
-    * JSR Search_Opcode
-    * MOVE.W #$8401, D7   *Testing for OR
-    * JSR Search_Opcode
-    * MOVE.W #$9249, D7   *Testing for SUB
-    * JSR Search_Opcode
-    * MOVE.W #$B200, D7   *Testing for CMP
-    * JSR Search_Opcode
-    * MOVE.W #$C338, D7   *Testing for AND
-    * JSR Search_Opcode
-    * MOVE.W #$D401, D7   *Testing for ADD
-    * JSR Search_Opcode
-    * MOVE.W #$E3F8, D7   *Testing for LSLm
-    * JSR Search_Opcode
-    * MOVE.W #$E54A, D7   *Testing for LSLr
-    * JSR Search_Opcode
-    * MOVE.W #$E0F8, D7   *Testing for ASRm
-    * JSR Search_Opcode
-    * MOVE.W #$E442, D7   *Testing for ASRr
-    * JSR Search_Opcode
+    RTS
+    
+Get_Bit11_to_Bit9 * destination register
+    MOVEM.L D7, -(SP)
+    LSL.W   #4, D7
+    LSR.W   #8, D7
+    LSR.W   #5, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+
+Get_Bit7_to_Bit0 
+    CLR.W   D6
+    MOVEM.L D7, -(SP)
+    LSL.W   #8, D7
+    LSR.W   #8, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS    
+
+Get_Bit11_to_Bit6
+    MOVEM.L D7, -(SP)
+    LSL.W   #4, D7
+    LSR.W   #8, D7
+    LSR.W   #2, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit15_to_Bit8
+    MOVEM.L D7, -(SP)
+    LSR.W   #8, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS    
+Get_Bit7_to_Bit6
+    MOVEM.L D7, -(SP)
+    LSL.W   #8, D7
+    LSR.W   #8, D7
+    LSR.W   #6, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS    
+
+Get_Bit0
+    MOVEM.L D7, -(SP)
+    LSL.W   #8, D7
+    LSL.W   #7, D7
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit1
+    MOVEM.L D7, -(SP)
+    LSL.W   #8, D7
+    LSL.W   #6, D7
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit2
+    MOVEM.L D7, -(SP)
+    LSL.W   #8, D7
+    LSL.W   #5, D7
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit3
+    MOVEM.L D7, -(SP)
+    LSL.W   #8, D7
+    LSL.W   #4, D7
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit4
+    MOVEM.L D7, -(SP)
+    LSL.W   #8, D7
+    LSL.W   #3, D7
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit5
+    MOVEM.L D7, -(SP)
+    LSL.W   #8, D7
+    LSL.W   #2, D7
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit6
+    MOVEM.L D7, -(SP)
+    LSL.W   #8, D7
+    LSL.W   #1, D7
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit7
+    MOVEM.L D7, -(SP)
+    LSL.W   #8, D7
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit8    
+    MOVEM.L D7, -(SP)
+    LSL.W   #7, D7
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit9
+    MOVEM.L D7, -(SP)
+    LSL.W   #6, D7
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit10
+    MOVEM.L D7, -(SP)
+    LSL.W   #5, D7
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit11
+    MOVEM.L D7, -(SP)
+    LSL.W   #4, D7
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit12
+    MOVEM.L D7, -(SP)
+    LSL.W   #3, D7
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit13
+    MOVEM.L D7, -(SP)
+    LSL.W   #2, D7
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit14
+    MOVEM.L D7, -(SP)
+    LSL.W   #1, D7
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+Get_Bit15
+    MOVEM.L D7, -(SP)
+    LSR.W   #8, D7
+    LSR.W   #7, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
