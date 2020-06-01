@@ -1,47 +1,36 @@
 * MOVE_EA
     
 Destination_Mode
-    MOVEM.L D7, -(SP)
-    LSL.W #7, D7
-    LSR.W #8, D7
-    LSR.W #5, D7
-    MOVE.B D7, D6
-    MOVEM.L (SP)+, D7
-    CMP.B #$0, D6
-    BEQ Print_DnDr
-    CMP.B #$1, D6
-    BEQ Print_AnDr
-    CMP.B #$2, D6
-    BEQ Print_Indr_AnDr
-    CMP.B #$3, D6
-    BEQ Print_Indr_Plus_AnDr
-    CMP.B #$4, D6
-    BEQ Print_Indr_Minus_AnDr
-    * CMP.B #$7, D6
-    * BEQ Print_MemAddr
-    BNE DISP_ERROR_MESSAGE
+    JSR     Get_Bit8_to_Bit6
+    CMP.B   #$0, D6
+    BEQ     Print_DnDr
+    CMP.B   #$1, D6
+    BEQ     Print_AnDr
+    CMP.B   #$2, D6
+    BEQ     Print_Indr_AnDr
+    CMP.B   #$3, D6
+    BEQ     Print_Indr_Plus_AnDr
+    CMP.B   #$4, D6
+    BEQ     Print_Indr_Minus_AnDr
+    CMP.B   #$7, D6
+    BEQ     Print_MemAddr
+    BNE     DISP_ERROR_MESSAGE
 
 Source_Mode
-    MOVEM.L D7, -(SP)
-    LSL.W #8, D7
-    LSL.W #2, D7
-    LSR.W #8, D7
-    LSR.W #5, D7
-    MOVE.B D7, D6
-    MOVEM.L (SP)+, D7
-    CMP.B #$0, D6
-    BEQ Print_DnSr
-    CMP.B #$1, D6
-    BEQ Print_AnSr
-    CMP.B #$2, D6
-    BEQ Print_Indr_AnSr
-    CMP.B #$3, D6
-    BEQ Print_Indr_Plus_AnSr
-    CMP.B #$4, D6
-    BEQ Print_Indr_Minus_AnSr
-    CMP.B #$7, D6
-    BEQ Print_MemAddr
-    BNE DISP_ERROR_MESSAGE
+    JSR     Get_Bit5_to_Bit3
+    CMP.B   #$0, D6
+    BEQ     Print_DnSr
+    CMP.B   #$1, D6
+    BEQ     Print_AnSr
+    CMP.B   #$2, D6
+    BEQ     Print_Indr_AnSr
+    CMP.B   #$3, D6
+    BEQ     Print_Indr_Plus_AnSr
+    CMP.B   #$4, D6
+    BEQ     Print_Indr_Minus_AnSr
+    CMP.B   #$7, D6
+    BEQ     Print_MemAddr
+    BNE     DISP_ERROR_MESSAGE
 
 Print_DnDr
     JSR     DISP_Str_Data_Reg
@@ -105,32 +94,15 @@ Print_Indr_Minus_AnSr
     RTS   
 
 Find_DR
-    MOVEM.L D7, -(SP)
-    LSL.W   #4, D7
-    LSR.W   #8, D7
-    LSR.W   #5, D7
-    MOVE.B  D7, D6
-    MOVEM.L (SP)+, D7
+    JSR     Get_Bit11_to_Bit9
     JMP     Print_Num
 
 Find_SR
-    MOVEM.L D7, -(SP)
-    LSL.W   #8, D7
-    LSL.W   #5, D7
-    LSR.W   #8, D7
-    LSR.W   #5, D7
-    MOVE.B  D7, D6
-    MOVEM.L (SP)+, D7
+    JSR     Get_Bit2_to_Bit0
     JMP     Print_Num
 
 Print_MemAddr
-    MOVEM.L D7, -(SP)
-    LSL.W   #8, D7
-    LSL.W   #5, D7
-    LSR.W   #8, D7
-    LSR.W   #5, D7
-    MOVE.B  D7, D6
-    MOVEM.L (SP)+, D7
+    JSR     Get_Bit2_to_Bit0
     CMP.B   #$0, D6
     BEQ     Mem_Word
     CMP.B   #$1, D6
@@ -173,9 +145,10 @@ Imme_Data_Long
     MOVE.W      D5, CURR_NIBBLES_MEM_LOC
     JSR         HEX_2_ASCII
     RTS
-*    move.w #$4210, D5
-*    move.w d5, CURR_NIBBLES_MEM_LOC
-*    JSR         HEX_2_ASCII
+
+Check_Opmode
+    JSR Get_Bit8_to_Bit6
+    
 Print_Num
     CMP.B   #$0, D6
     BEQ     Print_0

@@ -3,87 +3,77 @@
 
 * D5 is gonan be the size like .B, .W, .L
 Loop
-    CMPA.L A3, A2
-    BGE EXIT
+    CMPA.L  A3, A2
+    BGE     EXIT
 
 Parse_Start
-    JSR OUTPUT_ADDR_LOC
-    MOVE.W (A2)+, D7   *Testing for MOVE
+    JSR     OUTPUT_ADDR_LOC
+    MOVE.W  (A2)+, D7   *Testing for MOVE
     * JSR DISP_Current_Addr
-    JSR Search_Opcode
-    JMP Loop
+    JSR     Search_Opcode
+    JMP     Loop
 
 Search_Opcode
     * Get the first nibble
-    CMP.L #$4E75,D7    * RTS
-    BEQ Print_RTS
+    CMP.L   #$4E75,D7    * RTS
+    BEQ     Print_RTS
     MOVEM.L D7, -(SP)
-    LSR.W #8, D7
-    LSR.W #4, D7
-    MOVE.B D7, D6
+    LSR.W   #8, D7
+    LSR.W   #4, D7
+    MOVE.B  D7, D6
     MOVEM.L (SP)+, D7
-    CMP.B #$3, D6
-    BLE Bit_Equal_0000 * MOVE, MOVEA
-    CMP.B #$4,D6  
-    BEQ Bit_Equal_0100 * MOVEM, LEA, JSR, RTS
-    CMP.B #$6,D6  
-    BEQ Bit_Equal_0110 * BCC, BGT, BLE
-    CMP.B #$8,D6  
-    BEQ Bit_Equal_1000 * OR
-    CMP.B #$9,D6  
-    BEQ Bit_Equal_1001 * SUB
-    CMP.B #$B,D6  
-    BEQ Bit_Equal_1011 * CMP
-    CMP.B #$C,D6  
-    BEQ Bit_Equal_1100 * AND
-    CMP.B #$D,D6  
-    BEQ Bit_Equal_1101 * ADD
-    CMP.B #$E,D6  
-    BEQ Bit_Equal_1110 * LSLm, LSLr, ASRm,ASRr
+    CMP.B   #$3, D6
+    BLE     Bit_Equal_0000 * MOVE, MOVEA
+    CMP.B   #$4,D6  
+    BEQ     Bit_Equal_0100 * MOVEM, LEA, JSR, RTS
+    CMP.B   #$6,D6  
+    BEQ     Bit_Equal_0110 * BCC, BGT, BLE
+    CMP.B   #$8,D6  
+    BEQ     Bit_Equal_1000 * OR
+    CMP.B   #$9,D6  
+    BEQ     Bit_Equal_1001 * SUB
+    CMP.B   #$B,D6  
+    BEQ     Bit_Equal_1011 * CMP
+    CMP.B   #$C,D6  
+    BEQ     Bit_Equal_1100 * AND
+    CMP.B   #$D,D6  
+    BEQ     Bit_Equal_1101 * ADD
+    CMP.B   #$E,D6  
+    BEQ     Bit_Equal_1110 * LSLm, LSLr, ASRm,ASRr
 
 Bit_Equal_0000          * two bit is 00~~, the opcode is either MOVE or MOVEA
-    MOVEM.L D7, -(SP) 
-    LSL.W #7, D7
-    LSR.W #8, D7
-    LSR.W #5, D7
-    MOVE.B D7, D6
-    MOVEM.L (SP)+, D7
-    CMP.B #$1, D6       * if the destination mode is 1 then it is MOVEA
-    BEQ Print_MOVEA
-    BNE Print_MOVE
+    JSR     Get_Bit8_to_Bit6
+    CMP.B   #$1, D6       * if the destination mode is 1 then it is MOVEA
+    BEQ     Print_MOVEA
+    BNE     Print_MOVE
 
 Bit_Equal_0100            * nibble is 0100, the opcode is either MOVEM, LEA, or JSR
     MOVEM.L D7, -(SP)
-    LSL.W #4, D7
-    LSR.W #8, D7
-    LSR.W #2, D7
-    MOVE.W D7, D6
+    LSL.W   #4, D7
+    LSR.W   #8, D7
+    LSR.W   #2, D7
+    MOVE.W  D7, D6
     MOVEM.L (SP)+, D7
-    CMP.W #$3A, D6
-    BEQ Print_JSR
-    MOVEM.L D7, -(SP)
-    LSL.W #7, D7
-    LSR.W #8, D7
-    LSR.W #5, D7
-    MOVE.B D7, D6
-    MOVEM.L (SP)+, D7
-    CMP.B #$7, D6
-    BEQ Print_LEA
-    BNE Print_MOVEM
+    CMP.W   #$3A, D6
+    BEQ     Print_JSR
+    JSR     Get_Bit8_to_Bit6
+    CMP.B   #$7, D6
+    BEQ     Print_LEA
+    BNE     Print_MOVEM
 
 Bit_Equal_0110            * nibble is 0110, the opcode is either BCC, BGT, or BLE
     MOVEM.L D7, -(SP)
-    LSL.W #4, D7
-    LSR.W #8, D7
-    LSR.W #4, D7
-    MOVE.B D7, D6
+    LSL.W   #4, D7
+    LSR.W   #8, D7
+    LSR.W   #4, D7
+    MOVE.B  D7, D6
     MOVEM.L (SP)+, D7
-    CMP.B #$4, D6
-    BEQ Print_BCC
-    CMP.B #$E, D6
-    BEQ Print_BGT
-    CMP.B #$F, D6
-    BEQ Print_BLE
+    CMP.B   #$4, D6
+    BEQ     Print_BCC
+    CMP.B   #$E, D6
+    BEQ     Print_BGT
+    CMP.B   #$F, D6
+    BEQ     Print_BLE
 
 Bit_Equal_1000            * nibble is 1000, the opcode is OR
     BRA Print_OR
@@ -102,139 +92,180 @@ Bit_Equal_1101            * nibble is 1101, the opcode is ADD
 
 Bit_Equal_1110            * nibble is 1110, the opcode is either LSLm, LSLr, ASRm, or ASRr
     MOVEM.L D7, -(SP) 
-    LSL.W #7, D7
-    LSR.W #8, D7
-    LSR.W #5, D7
-    MOVE.B D7, D6
+    LSL.W   #7, D7
+    LSR.W   #8, D7
+    LSR.W   #5, D7
+    MOVE.B  D7, D6
     MOVEM.L (SP)+, D7 
-    CMP.B #$7,D6
-    BEQ Print_LSLm
-    CMP.B #$3,D6
-    BEQ Print_ASRm
-    CMP.B #$4,D6
-    BGE Print_LSLr
-    CMP.B #$2,D6
-    BLE Print_ASRr
+    CMP.B   #$7,D6
+    BEQ     Print_LSLm
+    CMP.B   #$3,D6
+    BEQ     Print_ASRm
+    CMP.B   #$4,D6
+    BGE     Print_LSLr
+    CMP.B   #$2,D6
+    BLE     Print_ASRr
 
 Get_Size_For_Move_Movea   * Now check the size (bit-13 to bit-12)
     MOVEM.L D7, -(SP) 
-    LSL.W #2, D7
-    LSR.W #8, D7
-    LSR.W #6, D7
-    MOVE.B D7, D5
+    LSL.W   #2, D7
+    LSR.W   #8, D7
+    LSR.W   #6, D7
+    MOVE.B  D7, D5
     MOVEM.L (SP)+, D7 
-    CMP.B #$1, D5       * if equal to 3 that mean its Byte because 01 is 1 in hex
-    BEQ Print_Size_Byte
-    CMP.B #$3, D5       * if equal to 3 that mean its Word because 11 is 3 in hex
-    BEQ Print_Size_Word
-    CMP.B #$2, D5       * if equal to 3 that mean its Long because 10 is 2 in hex
-    BEQ Print_Size_Long
-    BNE Print_Error
+    CMP.B   #$1, D5       * if equal to 3 that mean its Byte because 01 is 1 in hex
+    BEQ     Print_Size_Byte
+    CMP.B   #$3, D5       * if equal to 3 that mean its Word because 11 is 3 in hex
+    BEQ     Print_Size_Word
+    CMP.B   #$2, D5       * if equal to 3 that mean its Long because 10 is 2 in hex
+    BEQ     Print_Size_Long
+    BNE     Print_Error
 
 Print_Size_Byte
-    JSR DISP_STR_BYTE
-    JSR Source_Mode
-    JSR DISP_STR_COMMA
-    JSR DISP_STR_SPACE
-    JSR Destination_Mode
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_BYTE
+    JSR     Source_Mode
+    JSR     DISP_STR_COMMA
+    JSR     DISP_STR_SPACE
+    JSR     Destination_Mode
+    JSR     DISP_NEW_LINE
     RTS
 Print_Size_Word
-    JSR DISP_STR_WORD
-    JSR Source_Mode
-    JSR DISP_STR_COMMA
-    JSR DISP_STR_SPACE
-    JSR Destination_Mode
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_WORD
+    JSR     Source_Mode
+    JSR     DISP_STR_COMMA
+    JSR     DISP_STR_SPACE
+    JSR     Destination_Mode
+    JSR     DISP_NEW_LINE
     RTS
 Print_Size_Long
-    JSR DISP_STR_LONG
-    JSR Source_Mode
-    JSR DISP_STR_COMMA
-    JSR DISP_STR_SPACE
-    JSR Destination_Mode
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_LONG
+    JSR     Source_Mode
+    JSR     DISP_STR_COMMA
+    JSR     DISP_STR_SPACE
+    JSR     Destination_Mode
+    JSR     DISP_NEW_LINE
     RTS
 
 Print_MOVE
-    JSR DISP_STR_MOVE
-    JMP Get_Size_For_Move_Movea
+    JSR     DISP_STR_MOVE
+    JMP     Get_Size_For_Move_Movea
 Print_MOVEA
-    JSR DISP_STR_MOVEA
-    JMP Get_Size_For_Move_Movea
+    JSR     DISP_STR_MOVEA
+    JMP     Get_Size_For_Move_Movea
 
 Print_MOVEM
-    JSR DISP_STR_MOVEM
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_MOVEM
+    JSR     DISP_NEW_LINE
     RTS
 Print_LEA
-    JSR DISP_STR_LEA
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_LEA
+    JSR     DISP_STR_SPACE
+    JSR     Source_Mode
+    JSR     DISP_STR_COMMA
+    JSR     DISP_STR_SPACE
+    JSR     Print_AnDr
+    JSR     DISP_NEW_LINE
     RTS
 Print_JSR
-    JSR DISP_STR_JSR
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_JSR
+    JSR     DISP_STR_SPACE
+    JSR     Source_Mode
+    JSR     DISP_NEW_LINE
     RTS
 Print_RTS
-    JSR DISP_STR_RTS
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_RTS
+    JSR     DISP_NEW_LINE
     RTS
 
 Print_BCC
-    JSR DISP_STR_BCC
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_BCC
+    JSR     DISP_NEW_LINE
     RTS    
 Print_BGT
-    JSR DISP_STR_BGT
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_BGT
+    JSR     DISP_NEW_LINE
     RTS
 Print_BLE
-    JSR DISP_STR_BLE
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_BLE
+    JSR     DISP_NEW_LINE
     RTS
-
 Print_OR
-    JSR DISP_STR_OR
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_OR
+    JSR     DISP_STR_SPACE
+    JSR     Check_Opmode
+    JSR     DISP_NEW_LINE
     RTS
 Print_SUB
-    JSR DISP_STR_SUB
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_SUB
+    JSR     DISP_NEW_LINE
     RTS
 Print_CMP
-    JSR DISP_STR_CMP
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_CMP
+    JSR     DISP_NEW_LINE
     RTS
 Print_AND
-    JSR DISP_STR_AND
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_AND
+    JSR     DISP_NEW_LINE
     RTS
 Print_ADD
-    JSR DISP_STR_ADD
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_ADD
+    JSR     DISP_NEW_LINE
     RTS    
 Print_LSLm
-    JSR DISP_STR_LSLm
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_LSLm
+    JSR     DISP_NEW_LINE
     RTS
 Print_LSLr
-    JSR DISP_STR_LSLr
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_LSLr
+    JSR     DISP_NEW_LINE
     RTS
 Print_ASRm
-    JSR DISP_STR_ASRm
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_ASRm
+    JSR     DISP_NEW_LINE
     RTS        
 Print_ASRr
-    JSR DISP_STR_ASRr
-    JSR DISP_NEW_LINE
+    JSR     DISP_STR_ASRr
+    JSR     DISP_NEW_LINE
     RTS
-
 Print_Error
-    JSR DISP_ERROR_MESSAGE
-    JSR DISP_NEW_LINE
+    JSR     DISP_ERROR_MESSAGE
+    JSR     DISP_NEW_LINE
     RTS
 
+Get_Bit5_to_Bit3
+    MOVEM.L D7, -(SP)
+    LSL.W   #8, D7
+    LSL.W   #2, D7
+    LSR.W   #8, D7
+    LSR.W   #5, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+    RTS
+
+Get_Bit2_to_Bit0
+    MOVEM.L D7, -(SP)
+    LSL.W   #8, D7
+    LSL.W   #5, D7
+    LSR.W   #8, D7
+    LSR.W   #5, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+
+Get_Bit11_to_Bit9
+    MOVEM.L D7, -(SP)
+    LSL.W   #4, D7
+    LSR.W   #8, D7
+    LSR.W   #5, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
+
+Get_Bit8_to_Bit6
+    MOVEM.L D7, -(SP)
+    LSL.W   #7, D7
+    LSR.W   #8, D7
+    LSR.W   #5, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
     * MOVE.W #$327C, D7   *Testing for MOVEA
     * JSR Search_Opcode
     * MOVE.W #$48A1, D7   *Testing for MOVEM
