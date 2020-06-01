@@ -7,6 +7,7 @@ Loop
     BGE     EXIT
 
 Parse_Start
+    BSR     PRESS_ENTER_CHECK
     JSR     OUTPUT_ADDR_LOC
     MOVE.W  (A2)+, D7   *Testing for MOVE
     * JSR DISP_Current_Addr

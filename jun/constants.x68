@@ -45,6 +45,8 @@ Str_4                       DC.W '4', 0
 Str_5                       DC.W '5', 0
 Str_6                       DC.W '6', 0
 Str_7                       DC.W '7', 0
+Str_8                       DC.W '8', 0
+Str_9                       DC.W '9', 0
 
 * Letters                   
 Str_A                       DC.W 'A', 0

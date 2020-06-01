@@ -15,10 +15,10 @@ start		EQU	$00009000	* ORG and END address
 * ORG the program so that it straddles the address boundary $00007FFF to $00008000
 
 		ORG	start
-    OR.B    #$20, D7 * D S
-    OR.W    D7, (A4) * S D
-    OR.L    $8000, D5* D S
-    OR.L    D5, $8000* S D
+    OR.B    #$20, D7  * D S
+    OR.W    D7, (A4)  * S D
+    OR.L    $8000, D5 * D S
+    OR.L    D5, $8000 * S D
     CMP.B    D0,D1
     CMP.B    (A0),D1
     CMP.B    -(A0),D1
@@ -68,7 +68,7 @@ label1
     LEA       $1234,A0
     LEA       $12345678,A0
 
-    BCC.W     label0
+    * BCC.W     label0
     move.w    #$9016, d5
     move.w     #$FEE8, d4
     add.b     d4,d5

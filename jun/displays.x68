@@ -17,6 +17,32 @@ DISP_START_ADDR_PROMPT
     JSR TRAP14
     RTS
 
+PRESS_ENTER_CHECK
+    ADD         #1, D6					* D6 is used as the counter for number of 
+										* statements printed out. 
+    CMP         #30, D6 					* Since the screen is about 30 statements 
+										* in height, then this counter needs 
+										* to reach 30 before the user can press enter. 
+    BEQ         PRESS_ENTER_CONT_CHECK	* If 30 has been reached let the user enter. 
+    LEA         Str_Space, A1			* If not then just print a string.
+    MOVE        #13, D0					* Loads TRAP TASK #13
+    TRAP        #15						* Execute TRAP TASK
+    RTS									* Return to the subroutine
+
+******
+ * The PRESS_ENTER_CONT_CHECK subroutine: 
+ * --------------------------------------
+ * This subroutine is responsible for 
+ * allowing the user to press enter.
+ * This will in turn allow the print out
+ * of additional instructions to the screen.
+ ****
+PRESS_ENTER_CONT_CHECK
+    MOVE        #0, D6		* Reset the counter which is D6
+    MOVE.B      #5, D0		* Load TRAP TASK #5	
+    TRAP        #15			* Execute the TRAP TASK
+    RTS						* Rerturn to the subroutine.
+
 * * * * * * * * * * *
 * TODO - Implement  *
 * * * * * * * * * * *
@@ -194,12 +220,12 @@ DISP_STR_7
     RTS
 
 DISP_STR_8
-    LEA STR_8, A1
+    LEA Str_8, A1
     JSR TRAP14
     RTS
 
 DISP_STR_9
-    LEA STR_9, A1
+    LEA Str_9, A1
     JSR TRAP14
     RTS
 
