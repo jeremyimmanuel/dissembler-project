@@ -30,7 +30,10 @@ START:
     INCLUDE 'ascii_hex.x68' ; convert user input from ASCII values to hex values
                             ; starting address saved in A2
                             ; ending address saved in A3
+    INCLUDE 'store_nibble.x68'
     INCLUDE 'opcode.x68'
+    INCLUDE 'hex_ascii.x68'
+    
 
 
     INCLUDE 'constants.x68'     ; constants file
