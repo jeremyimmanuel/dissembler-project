@@ -23,8 +23,8 @@ PRESS_ENTER_CHECK
     CMP         #30, D4 					* Since the screen is about 30 statements 
 										* in height, then this counter needs 
 										* to reach 30 before the user can press enter. 
-    BEQ         PRESS_ENTER_CONT_CHECK	* If 30 has been reached let the user enter. 
-    LEA         Str_Space, A1			* If not then just print a string.
+    BGE         PRESS_ENTER_CONT_CHECK	* If 30 has been reached let the user enter. 
+    LEA         Str_Empty, A1			* If not then just print a string.
     MOVE        #14, D0					* Loads TRAP TASK #13
     TRAP        #15						* Execute TRAP TASK
     RTS									* Return to the subroutine

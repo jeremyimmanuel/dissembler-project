@@ -59,6 +59,7 @@ Str_F                       DC.W 'F', 0
 * Space
 New_Line                    DC.B CR,LF, 0
 Str_Space                   DC.W ' ', 0
+Str_Empty                   DC.W '', 0
 
 * Error message
 Str_ERROR                   DC.L 'Invalid Opcode', 0
