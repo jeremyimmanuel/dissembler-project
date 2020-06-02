@@ -1,3 +1,9 @@
+*-----------------------------------------------------------
+* Title      : effective_address.68
+* Written by : Jeremy Tandjung, Angie Tserenjav, Jun Zhen
+* Date       : 05/16/2020
+* Description: 
+*-----------------------------------------------------------
 * MOVE_EA
     
 Destination_Mode

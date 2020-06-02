@@ -1,3 +1,10 @@
+*-----------------------------------------------------------
+* Title      : parse_opcode.x68
+* Written by : Jeremy Tandjung, Angie Tserenjav, Jun Zhen
+* Date       : 05/16/2020
+* Description: 
+*-----------------------------------------------------------
+
 * Read one word from memory at a time and store it in D7.
 * D7 is gonna be the primary storage for data(opcode) retrieved from memory.
 
