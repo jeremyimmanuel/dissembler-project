@@ -7,6 +7,10 @@
 *-----------------------------------------------------------
     
 ASCII_2_HEX:
+    CMP     #8, D1              ; if user inputs a string more than
+                                ; 8 bits, bad input
+    BGT     Bad_Input_Handler
+
     LSL.L   #4, D3              ; Shifting one hexabit at holder
     MOVE.B (A1)+, D0            ; move to register 
 
