@@ -2,20 +2,14 @@
 * Title      : CSS 422  Disassembler
 * Written by : Jeremy, Angie, Jun
 * Date       : June 8th, 2020
-* Description: 
+* Description: This is the main file
 *-----------------------------------------------------------
 
 START_ADDR_MEM_LOC          EQU    $400     ; store starting address in this memory location 
 END_ADDR_MEM_LOC            EQU    $450     ; store ending address in this memory location 
 CURR_NIBBLES_MEM_LOC        EQU    $500     ; store first four bits 
-DEST_MEM_LOC                EQU    $550     ; store destination address in this memory location 
-DEST_MODE_MEM_LOC           EQU    $600     ; store destination mode
-SRC_MODE_MEM_LOC            EQU    $650     ; store source mode 
-SRC_MEM_LOC                 EQU    $700     ; store source address
-STORAGE_MEM_LOC             EQU    $750     ; temporary storage for data
-A1_COPY_ONE_MEM_LOC         EQU    $800     ; store copy of end address to avoid overwriting 
-A1_COPY_TWO_MEM_LOC         EQU    $850     ; store copy of start address to avoid overwriting 
-STORE_TWO_NIBBLES_MEM_LOC   EQU    $900     ; store two nibbles 
+A1_COPY_ONE_MEM_LOC         EQU    $550     ; store copy of end address to avoid overwriting 
+A1_COPY_TWO_MEM_LOC         EQU    $600     ; store copy of start address to avoid overwriting 
     
     ORG $1000
 START:

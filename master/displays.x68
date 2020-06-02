@@ -6,12 +6,12 @@
 *               in this program. When calling DISPS, please
 *               use JSR or BSR so that it can RTS
 *-----------------------------------------------------------
-TRAP13
+TRAP13              ; print(content of A1)
     MOVE.B #13, D0
     TRAP #15
     RTS
 
-TRAP14
+TRAP14              ; println(content of A1)
     MOVE.B #14, D0
     TRAP #15
     RTS
