@@ -1,3 +1,10 @@
+*-----------------------------------------------------------
+* Title      : constants.x68
+* Written by : Jeremy, Angie, Jun
+* Date       : June 8th, 2020
+* Description: Stores every string constatnts used in program
+*-----------------------------------------------------------
+
 * Instruction strings
 CR                          EQU     $0D
 LF                          EQU     $0A
@@ -61,6 +68,7 @@ New_Line                    DC.B CR,LF, 0
 Str_Space                   DC.W ' ', 0
 Str_Empty                   DC.W '', 0
 
+* Intro Banner
 Banner       DC.B    '************************************************************************',CR,LF     
              DC.B    '*                        W E L C O M E ',CR,LF,CR,LF
              DC.B    '*                            TO ',CR,LF,CR,LF

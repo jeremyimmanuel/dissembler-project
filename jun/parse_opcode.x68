@@ -8,7 +8,7 @@ Loop
 
 Parse_Start
     BSR     Check_Full_Screen
-    JSR     OUTPUT_ADDR_LOC
+    JSR     DISP_ADDR_LOC
     MOVE.W  (A2)+, D7   *Testing for MOVE
     * JSR DISP_Current_Addr
     JSR     Search_Opcode

@@ -1,21 +1,26 @@
 HEX_2_ASCII
     LEA         JMPTABLE_HEX_CHAR, A4           ; Moving a subroutine to A4
-    MOVE.W      CURR_NIBBLES_MEM_LOC,D3         ; go to the constant var we declared
+    
+    MOVE.W      CURR_NIBBLES_MEM_LOC, D3         ; go to the constant var we declared
     JSR         STORE_FIRST_NIBBLE_IN_D3        ;
-    MULU        #6,D3
+    MULU        #6, D3
     JSR         0(A4,D3)
+    
     MOVE.W      CURR_NIBBLES_MEM_LOC,D3
     JSR         STORE_SECOND_NIBBLE_IN_D3
     MULU        #6,D3
     JSR         0(A4,D3)
+    
     MOVE.W      CURR_NIBBLES_MEM_LOC,D3
     JSR         STORE_THIRD_NIBBLE_IN_D3
     MULU        #6,D3
     JSR         0(A4,D3)
+    
     MOVE.W      CURR_NIBBLES_MEM_LOC,D3
     JSR         STORE_FOURTH_NIBBLE_IN_D3
     MULU        #6,D3
     JSR         0(A4,D3)
+    
     CLR.W       D3
     RTS
 

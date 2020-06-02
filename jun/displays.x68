@@ -1,6 +1,11 @@
-* Display Subroutines
-* All these DISPLAY subroutines must be called via
-* a BSR / JSR because of the RTS
+*-----------------------------------------------------------
+* Title      : constants.x68
+* Written by : Jeremy, Angie, Jun
+* Date       : June 8th, 2020
+* Description: Stores every display/print statements used 
+*               in this program. When calling DISPS, please
+*               use JSR or BSR so that it can RTS
+*-----------------------------------------------------------
 TRAP13
     MOVE.B #13, D0
     TRAP #15
@@ -24,25 +29,16 @@ DISP_START_ADDR_PROMPT
     RTS
 
 Check_Full_Screen
-    ADD         #1, D4					
-										* statements printed out. 
-    CMP         #31, D4 					* Since the screen is about 30 statements 
-										* in height, then this counter needs 
-										* to reach 30 before the user can press enter. 
-    BGE         Press_Enter_To_Continue	* If 30 has been reached let the user enter. 
+    ADD         #1, D4					; uses D4 as a line counter									
+    CMP         #31, D4 				; one full screen of easy68k sim terminal
+                                        ; is 30 lines, we use 31 to accomodate the
+                                        ; press enter to continue prompt
+										
+    BGE         Press_Enter_To_Continue	; if 31 lines have been reached, display the press enter check
     LEA         Str_Empty, A1			* If not then just print a string.
-    MOVE        #14, D0					* Loads TRAP TASK #13
-    TRAP        #15						* Execute TRAP TASK
+    JSR         TRAP14
     RTS									* Return to the subroutine
 
-******
- * The PRESS_ENTER_CONT_CHECK subroutine: 
- * --------------------------------------
- * This subroutine is responsible for 
- * allowing the user to press enter.
- * This will in turn allow the print out
- * of additional instructions to the screen.
- ****
 Press_Enter_To_Continue
     JSR         DISP_PRESS_ENTER
     MOVE        #0, D4		* Reset the counter which is D6
@@ -50,10 +46,7 @@ Press_Enter_To_Continue
     TRAP        #15			* Execute the TRAP TASK
     RTS						* Rerturn to the subroutine.
 
-* * * * * * * * * * *
-* TODO - Implement  *
-* * * * * * * * * * *
-OUTPUT_ADDR_LOC
+DISP_ADDR_LOC
     MOVE.L      A2,D5 							* Store the current address that the disassembler is at					
     MOVE.L      D5,CURR_NIBBLES_MEM_LOC     * Copy the long address in its entirety 
     JSR         HEX_2_ASCII			        * Output the 8 bit data field
