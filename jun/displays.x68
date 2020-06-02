@@ -16,16 +16,16 @@ TRAP14
     TRAP #15
     RTS
 
-DISP_BANNER
-    MOVEA.L #0, A1 
+DISP_BANNER                     ; Displayes introduction banner
+    MOVEA.L #0, A1              ; Clear A1
     LEA Banner, A1
     JSR TRAP14
     RTS
 
 DISP_START_ADDR_PROMPT
-    MOVEA.L #0, A1      ; Clear A1
+    MOVEA.L #0, A1                      ; Clear A1
     LEA     start_addr_instruction, A1  ; Display promp for starting address
-    JSR TRAP14
+    JSR     TRAP14
     RTS
 
 Check_Full_Screen
@@ -35,31 +35,30 @@ Check_Full_Screen
                                         ; press enter to continue prompt
 										
     BGE         Press_Enter_To_Continue	; if 31 lines have been reached, display the press enter check
-    LEA         Str_Empty, A1			* If not then just print a string.
+    LEA         Str_Empty, A1			
     JSR         TRAP14
-    RTS									* Return to the subroutine
+    RTS									
 
 Press_Enter_To_Continue
-    JSR         DISP_PRESS_ENTER
-    MOVE        #0, D4		* Reset the counter which is D6
-    MOVE.B      #5, D0		* Load TRAP TASK #5	
-    TRAP        #15			* Execute the TRAP TASK
-    RTS						* Rerturn to the subroutine.
+    JSR         DISP_PRESS_ENTER        ; Display press enter prompt
+    MOVE        #0, D4		            ; Reset line counter at D4
+    MOVE.B      #5, D0
+    TRAP        #15	
+    RTS					
 
 DISP_ADDR_LOC
-    MOVE.L      A2,D5 							* Store the current address that the disassembler is at					
-    MOVE.L      D5,CURR_NIBBLES_MEM_LOC     * Copy the long address in its entirety 
-    JSR         HEX_2_ASCII			        * Output the 8 bit data field
-    MOVE.W      A2,D5							* Store the current address that the disassembler is at
-    MOVE.W      D5,CURR_NIBBLES_MEM_LOC		* Copy the long address in its entirety 
-    JSR         HEX_2_ASCII		        * Output the 8 bit data field
-    JSR         DISP_STR_SPACE			* Invokes subroutine to print a space
+    MOVE.L      A2, D5 							; Store the current address to D5 
+    MOVE.L      D5, CURR_NIBBLES_MEM_LOC        ; Move current address value to memory
+    JSR         HEX_2_ASCII			            ; Displays the first four hexabits
+    MOVE.W      A2, D5							; Repeat but word to get last four hexabits
+    MOVE.W      D5, CURR_NIBBLES_MEM_LOC		
+    JSR         HEX_2_ASCII		        
+    JSR         DISP_STR_SPACE			        ; Display space
     RTS
 
 DISP_INVALID_ADDRESS_ERROR
-    LEA         error_message, A1               ; Load error message
-    MOVE.B      #13,D0                          ; Trap task 13
-    TRAP        #15    
+    LEA         error_message, A1                ; Load error message
+    JSR         TRAP13
     RTS
 
 DISP_NEW_LINE
@@ -160,6 +159,8 @@ DISP_STR_COMMA
     JSR TRAP14
     RTS
 
+********* Data size ***********
+
 DISP_STR_BYTE
     MOVEA.L #0, A1      ; Clear A1
     LEA STR_BYTE, A1   
@@ -183,6 +184,8 @@ DISP_STR_SPACE
     LEA STR_SPACE, A1
     JSR TRAP14
     RTS
+
+********* Numbers ****************
 
 DISP_STR_0
     LEA STR_0, A1
@@ -233,6 +236,8 @@ DISP_STR_9
     LEA Str_9, A1
     JSR TRAP14
     RTS
+
+********* Letters ****************
 
 DISP_STR_A 
     LEA STR_A, A1
