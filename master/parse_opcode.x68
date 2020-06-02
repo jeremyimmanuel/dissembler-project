@@ -17,7 +17,6 @@ Parse_Start
     BSR     Check_Full_Screen
     JSR     DISP_ADDR_LOC
     MOVE.W  (A2)+, D7   *Testing for MOVE
-    * JSR DISP_Current_Addr
     JSR     Search_Opcode
     JMP     Loop
 
@@ -25,17 +24,15 @@ Search_Opcode
     * Get the first nibble
     CMP.L   #$4E75,D7    * RTS
     BEQ     Print_RTS
-    MOVEM.L D7, -(SP)
-    LSR.W   #8, D7
-    LSR.W   #4, D7
-    MOVE.B  D7, D6
-    MOVEM.L (SP)+, D7
+    JSR     Get_First_Nibble
+    CMP.B   #$0, D6
+    BEQ     Bit_Equal_0000 * SUBI, ADDI, CMPI, ANDI, ORI
     CMP.B   #$1, D6
-    BEQ     Bit_Equal_0000 * MOVE, MOVEA
+    BEQ     Bit_Equal_00XX * MOVE, MOVEA
     CMP.B   #$2, D6
-    BEQ     Bit_Equal_0000 * MOVE, MOVEA
+    BEQ     Bit_Equal_00XX * MOVE, MOVEA
     CMP.B   #$3, D6
-    BEQ     Bit_Equal_0000 * MOVE, MOVEA
+    BEQ     Bit_Equal_00XX * MOVE, MOVEA
     CMP.B   #$4,D6  
     BEQ     Bit_Equal_0100 * MOVEM, LEA, JSR, RTS
     CMP.B   #$6,D6  
@@ -54,7 +51,21 @@ Search_Opcode
     BEQ     Bit_Equal_1110 * LSLm, LSLr, ASRm,ASRr
     BNE     Print_Error
 
-Bit_Equal_0000          * two bit is 00~~, the opcode is either MOVE or MOVEA
+Bit_Equal_0000
+    JSR     Get_Bit11_to_Bit9    
+    CMP.B   #$0, D6
+    BEQ     Print_OR
+    CMP.B   #$1, D6
+    BEQ     Print_AND
+    CMP.B   #$2, D6
+    BEQ     Print_SUB
+    CMP.B   #$3, D6
+    BEQ     Print_ADD
+    CMP.B   #$6, D6
+    BEQ     Print_CMP
+    BNE     Print_Error
+
+Bit_Equal_00XX          * two bit is 00~~, the opcode is either MOVE or MOVEA
     JSR     Get_Bit8_to_Bit6
     CMP.B   #$1, D6       * if the destination mode is 1 then it is MOVEA
     BEQ     Print_MOVEA
@@ -139,21 +150,16 @@ Check_Right_Only
     BNE     Print_Error
 
 Get_Size_For_Move_Movea   * Now check the size (bit-13 to bit-12)
-    MOVEM.L D7, -(SP) 
-    LSL.W   #2, D7
-    LSR.W   #8, D7
-    LSR.W   #6, D7
-    MOVE.B  D7, D5
-    MOVEM.L (SP)+, D7 
-    CMP.B   #$1, D5       * if equal to 3 that mean its Byte because 01 is 1 in hex
+    JSR     Get_Bit13_to_Bit12
+    CMP.B   #$1, D6       * if equal to 3 that mean its Byte because 01 is 1 in hex
     BEQ     Print_Size_Byte
-    CMP.B   #$3, D5       * if equal to 3 that mean its Word because 11 is 3 in hex
+    CMP.B   #$3, D6       * if equal to 3 that mean its Word because 11 is 3 in hex
     BEQ     Print_Size_Word
-    CMP.B   #$2, D5       * if equal to 3 that mean its Long because 10 is 2 in hex
+    CMP.B   #$2, D6       * if equal to 3 that mean its Long because 10 is 2 in hex
     BEQ     Print_Size_Long
     BNE     Print_Error
 
-Get_Size_For_OR_SUB_CMP_AND_ADD  * Now check the size (bit-13 to bit-12)
+Get_Size_For_OR_SUB_CMP_AND_ADD  
     JSR     Get_Bit8_to_Bit6
     CMP.B   #$0, D6
     BEQ     Print_Size_Byte
@@ -316,7 +322,7 @@ Print_ASRr
 Print_Error
     JSR     DISP_ERROR_MESSAGE
     JSR     DISP_NEW_LINE
-    RTS
+    JMP     Loop
 Print_Size_Byte
     JSR     DISP_STR_BYTE
     RTS
@@ -325,6 +331,14 @@ Print_Size_Word
     RTS
 Print_Size_Long
     JSR     DISP_STR_LONG
+    RTS
+
+Get_First_Nibble
+    MOVEM.L D7, -(SP)
+    LSR.W   #8, D7
+    LSR.W   #4, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7
     RTS
 
 Get_Bit4_to_Bit3 
@@ -392,6 +406,16 @@ Get_Bit11_to_Bit6
     MOVE.B  D7, D6
     MOVEM.L (SP)+, D7
     RTS
+
+Get_Bit13_to_Bit12
+    MOVEM.L D7, -(SP) 
+    LSL.W   #2, D7
+    LSR.W   #8, D7
+    LSR.W   #6, D7
+    MOVE.B  D7, D6
+    MOVEM.L (SP)+, D7 
+    RTS
+        
 Get_Bit15_to_Bit8
     MOVEM.L D7, -(SP)
     LSR.W   #8, D7

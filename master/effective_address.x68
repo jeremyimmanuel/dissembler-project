@@ -114,37 +114,54 @@ Print_MemAddr
     CMP.B   #$1, D6
     BEQ     Mem_Long
     CMP.B   #$4, D6
-    BEQ     Imme_Data
+    BEQ     Immedi_Data
 
 Mem_Word
     JSR     DISP_Str_Hex_Symbol
-    JSR     Imme_Data_Word
+    JSR     Immedi_Data_Word
     RTS
 Mem_Long
     JSR     DISP_Str_Hex_Symbol
-    JSR     Imme_Data_Long
+    JSR     Immedi_Data_Long
     RTS
 
-Imme_Data
+Immedi_Data
     JSR     DISP_Str_Hashtag_Symbol
     JSR     DISP_Str_Hex_Symbol
-    CMP.B   #$1, D5       * if equal to 3 that mean its Byte because 01 is 1 in hex
-    BEQ     Imme_Data_Byte
-    CMP.B   #$3, D5       * if equal to 3 that mean its Word because 11 is 3 in hex
-    BEQ     Imme_Data_Word
-    CMP.B   #$2, D5       * if equal to 3 that mean its Long because 10 is 2 in hex
-    BEQ     Imme_Data_Long
-Imme_Data_Byte    
+    JSR     Get_First_Nibble
+    CMP.B   #$3, D6
+    BLE     Size_Move
+    BGE     Size_Arthm
+
+Size_Arthm
+    JSR     Get_Bit7_to_Bit6
+    CMP.B   #$1, D6       * if equal to 3 that mean its Byte because 01 is 1 in hex
+    BEQ     Immedi_Data_Byte
+    CMP.B   #$3, D6       * if equal to 3 that mean its Word because 11 is 3 in hex
+    BEQ     Immedi_Data_Word
+    CMP.B   #$2, D6       * if equal to 3 that mean its Long because 10 is 2 in hex
+    BEQ     Immedi_Data_Long
+
+Size_Move
+    JSR     Get_Bit13_to_Bit12
+    CMP.B   #$1, D6       * if equal to 3 that mean its Byte because 01 is 1 in hex
+    BEQ     Immedi_Data_Byte
+    CMP.B   #$3, D6       * if equal to 3 that mean its Word because 11 is 3 in hex
+    BEQ     Immedi_Data_Word
+    CMP.B   #$2, D6       * if equal to 3 that mean its Long because 10 is 2 in hex
+    BEQ     Immedi_Data_Long
+    
+Immedi_Data_Byte    
     MOVE.W      (A2)+, D5
     MOVE.W      D5, CURR_NIBBLES_MEM_LOC
     JSR         HEX_2_ASCII
     RTS
-Imme_Data_Word
+Immedi_Data_Word
     MOVE.W      (A2)+, D5
     MOVE.W      D5, CURR_NIBBLES_MEM_LOC
     JSR         HEX_2_ASCII
     RTS
-Imme_Data_Long
+Immedi_Data_Long
     MOVE.L      (A2)+, D5
     MOVE.L      D5, CURR_NIBBLES_MEM_LOC
     JSR         HEX_2_ASCII
@@ -153,30 +170,48 @@ Imme_Data_Long
     RTS
 
 Check_Opmode
-    MOVEM.L D7, -(SP)
-    LSL.W   #7, D7
-    LSR.W   #8, D7
-    LSR.W   #7, D7
-    MOVE.B  D7, D6
-    MOVEM.L (SP)+, D7
+    JSR     Get_First_Nibble
     CMP.B   #$0, D6
-    BEQ     DesSou
+    BEQ     Immedi_Dn
+
+    JSR     Get_Bit8   
+    CMP.B   #$0, D6
+    BEQ     ea_Dn
     CMP.B   #$1, D6
-    BEQ     SouDes
+    BEQ     Dn_ea
     BNE     Print_Error
 
-DesSou
+ea_Dn
     JSR     Source_Mode
     JSR     DISP_STR_COMMA
     JSR     DISP_STR_SPACE
     JSR     Print_DnDr
     RTS
-SouDes
+Dn_ea
     JSR     Print_DnDr
     JSR     DISP_STR_COMMA
     JSR     DISP_STR_SPACE
     JSR     Source_Mode
     RTS
+
+Immedi_Dn
+    JSR     DISP_Str_Hashtag_Symbol
+    JSR     DISP_Str_Hex_Symbol
+    JSR     Print_Arthm_Immedi
+    JSR     DISP_STR_COMMA
+    JSR     DISP_STR_SPACE
+    JSR     Source_Mode
+    RTS
+
+Print_Arthm_Immedi
+    JSR     Get_Bit7_to_Bit6
+    CMP.B   #0, D6
+    BEQ     Immedi_Data_Byte
+    CMP.B   #1, D6
+    BEQ     Immedi_Data_Word
+    CMP.B   #2, D6
+    BEQ     Immedi_Data_Long
+
 
 Check_Displacement
     CMP.B   #$00, D6
@@ -205,6 +240,7 @@ Displacement_16_Bit
     ADD.W   D6, D5
     MOVE.W  D5, CURR_NIBBLES_MEM_LOC
     JSR     HEX_2_ASCII
+    CLR     D6
     RTS
 
 Displacement_32_Bit
@@ -239,26 +275,76 @@ Transfer_Direction
     BEQ     Mem_to_Reg
     BNE     Print_Error
 
-Reg_To_Mem    
-    JSR     Movem_Source_Mode
-    RTS
-* example: MOVEM.W   (A1)+,A1-A7
-Mem_to_Reg
-    JSR     Movem_Source_Mode
-    RTS
-
-Movem_Source_Mode
+* example: MOVEM.W   A1-A7, (A1)+
+Reg_To_Mem
     JSR     Get_Bit5_to_Bit3
     CMP.B   #$2, D6
-    BEQ     Print_Indr_Movem
-    CMP.B   #$3, D6
-    BEQ     Print_Indr_Plus_Movem
+    BEQ     Print_Indr_Movem_RM
     CMP.B   #$4, D6
-    BEQ     Print_Indr_Minus_Movem
+    BEQ     Print_Indr_Minus_Movem_RM
     CMP.B   #$7, D6
-    BEQ     Print_MemAddr_Movem
-    BNE     DISP_ERROR_MESSAGE    
-Print_Indr_Movem
+    BEQ     Print_MemAddr_RM
+    BNE     DISP_ERROR_MESSAGE  
+Print_Indr_Movem_RM
+    MOVE.W  (A2), D7
+    JSR     Postincrement_Movem
+    JSR     DISP_STR_COMMA
+    JSR     DISP_STR_SPACE
+    JSR     DISP_Str_Open_Brack_Symbol
+    MOVE.W  -(A2), D7
+    JSR     DISP_Str_Addr_Reg
+    JSR     Find_SR
+    JSR     DISP_Str_Close_Brack_Symbol
+    ADDA    #$4, A2
+    RTS  
+Print_Indr_Minus_Movem_RM
+    MOVE.W  (A2), D7
+    JSR     Predecrement_Movem
+    JSR     DISP_STR_COMMA
+    JSR     DISP_STR_SPACE
+    JSR     DISP_Str_Minus_Symbol
+    JSR     DISP_Str_Open_Brack_Symbol
+    MOVE.W  -(A2), D7
+    JSR     DISP_Str_Addr_Reg
+    JSR     Find_SR
+    JSR     DISP_Str_Close_Brack_Symbol
+    ADDA    #$4, A2
+    RTS  
+Print_MemAddr_RM
+    JSR     Get_Bit2_to_Bit0
+    CMP.B   #$0, D6
+    BEQ     Mem_Word_RM
+    CMP.B   #$1, D6
+    BEQ     Mem_Long_RM
+    BNE     Print_Error
+Mem_Word_RM
+    MOVE.W  (A2)+, D7
+    JSR     Postincrement_Movem
+    JSR     DISP_STR_COMMA
+    JSR     DISP_STR_SPACE
+    JSR     DISP_Str_Hex_Symbol
+    JSR     Immedi_Data_Word
+    RTS
+Mem_Long_RM
+    MOVE.W  (A2)+, D7
+    JSR     Postincrement_Movem
+    JSR     DISP_STR_COMMA
+    JSR     DISP_STR_SPACE
+    JSR     DISP_Str_Hex_Symbol
+    JSR     Immedi_Data_Long
+    RTS
+
+* example: MOVEM.W   (A1),A1-A7
+Mem_to_Reg
+    JSR     Get_Bit5_to_Bit3
+    CMP.B   #$2, D6
+    BEQ     Print_Indr_Movem_MR
+    CMP.B   #$3, D6
+    BEQ     Print_Indr_Plus_Movem_MR
+    CMP.B   #$7, D6
+    BEQ     Print_MemAddr_MR
+    BNE     DISP_ERROR_MESSAGE  
+Print_Indr_Movem_MR
     JSR     DISP_Str_Open_Brack_Symbol
     JSR     DISP_Str_Addr_Reg
     JSR     Find_SR
@@ -268,7 +354,7 @@ Print_Indr_Movem
     MOVE.W  (A2)+, D7
     JSR     Postincrement_Movem
     RTS  
-Print_Indr_Plus_Movem
+Print_Indr_Plus_Movem_MR
     JSR     DISP_Str_Open_Brack_Symbol
     JSR     DISP_Str_Addr_Reg
     JSR     Find_SR
@@ -279,27 +365,17 @@ Print_Indr_Plus_Movem
     MOVE.W  (A2)+, D7
     JSR     Postincrement_Movem
     RTS
-Print_Indr_Minus_Movem
-    JSR     DISP_Str_Minus_Symbol
-    JSR     DISP_Str_Open_Brack_Symbol
-    JSR     DISP_Str_Addr_Reg
-    JSR     Find_SR
-    JSR     DISP_Str_Close_Brack_Symbol
-    JSR     DISP_STR_COMMA
-    JSR     DISP_STR_SPACE
-    JSR     Predecrement_Movem
-    RTS   
-Print_MemAddr_Movem
+Print_MemAddr_MR
     JSR     Get_Bit2_to_Bit0
     CMP.B   #$0, D6
-    BEQ     Mem_Word_Movem
+    BEQ     Mem_Word_MR
     CMP.B   #$1, D6
-    BEQ     Mem_Long_Movem
+    BEQ     Mem_Long_MR
     BNE     Print_Error
-Mem_Word_Movem
+Mem_Word_MR
     JSR     DISP_Str_Hex_Symbol
     ADDA    #$2, A2
-    JSR     Imme_Data_Word
+    JSR     Immedi_Data_Word
     JSR     DISP_STR_COMMA
     JSR     DISP_STR_SPACE
     SUBA    #$2, A2
@@ -307,54 +383,16 @@ Mem_Word_Movem
     JSR     Postincrement_Movem
     ADDA    #$4, A2
     RTS
-Mem_Long_Movem
+Mem_Long_MR
     JSR     DISP_Str_Hex_Symbol
     ADDA    #$2, A2
-    JSR     Imme_Data_Long
+    JSR     Immedi_Data_Long
     JSR     DISP_STR_COMMA
     JSR     DISP_STR_SPACE
     SUBA    #$4, A2
     MOVE.W  -(A2), D7
     JSR     Postincrement_Movem
     ADDA    #$6, A2
-    RTS
-
-Dn_Regs
-    CMP.B   #1,D6
-    BEQ     Print_Dn_Regs
-    RTS
-
-An_Regs
-    CMP.B   #1,D6
-    BEQ     Print_An_Regs
-    RTS
-
-Print_Dn_Regs
-    CMP.B   #$01, D1
-    BEQ     Is_First_Dn_Reg
-    JSR     DISP_Str_Slash_Symbol
-    JSR     DISP_Str_Data_Reg
-    JSR     Print_NumD5
-    RTS
-
-Print_An_Regs
-    CMP.B   #$01, D1
-    BEQ     Is_First_An_Reg
-    JSR     DISP_Str_Slash_Symbol
-    JSR     DISP_Str_Addr_Reg
-    JSR     Print_NumD5    
-    RTS
-
-Is_First_Dn_Reg
-    JSR     DISP_Str_Data_Reg
-    JSR     Print_NumD5
-    CLR.B   D1
-    RTS
-
-Is_First_An_Reg
-    JSR     DISP_Str_Addr_Reg
-    JSR     Print_NumD5
-    CLR.B   D1
     RTS
 
 Postincrement_Movem
@@ -409,16 +447,19 @@ Postincrement_Movem
     MOVE.B  #7, D5
     JSR     An_Regs
     RTS
-    
+
 Predecrement_Movem
     CLR.B   D1
     MOVE.B  #$01, D1
+
     JSR     Get_Bit0
     MOVE.B  #7, D5
     JSR     An_Regs
+
     JSR     Get_Bit1
     MOVE.B  #6, D5
     JSR     An_Regs
+
     JSR     Get_Bit2
     MOVE.B  #5, D5
     JSR     An_Regs
@@ -461,6 +502,41 @@ Predecrement_Movem
     JSR     Get_Bit15
     MOVE.B  #0, D5
     JSR     Dn_Regs
+    RTS
+
+Dn_Regs
+    CMP.B   #1,D6
+    BEQ     Print_Dn_Regs
+    RTS
+An_Regs
+    CMP.B   #1,D6
+    BEQ     Print_An_Regs
+    RTS
+
+Print_Dn_Regs
+    CMP.B   #$01, D1
+    BEQ     Is_First_Dn_Reg
+    JSR     DISP_Str_Slash_Symbol
+    JSR     DISP_Str_Data_Reg
+    JSR     Print_NumD5
+    RTS
+Print_An_Regs
+    CMP.B   #$01, D1
+    BEQ     Is_First_An_Reg
+    JSR     DISP_Str_Slash_Symbol
+    JSR     DISP_Str_Addr_Reg
+    JSR     Print_NumD5    
+    RTS
+
+Is_First_Dn_Reg
+    JSR     DISP_Str_Data_Reg
+    JSR     Print_NumD5
+    CLR.B   D1
+    RTS
+Is_First_An_Reg
+    JSR     DISP_Str_Addr_Reg
+    JSR     Print_NumD5
+    CLR.B   D1
     RTS
 
 Print_Num
