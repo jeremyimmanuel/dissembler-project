@@ -107,18 +107,36 @@ Bit_Equal_0110            * nibble is 0110, the opcode is either BCC, BGT, or BL
     BNE     Print_Error
 
 Bit_Equal_1000            * nibble is 1000, the opcode is OR
-    BRA Print_OR
+    JSR     Get_Bit7_to_Bit6
+    CMP     #$3, D6
+    BEQ     Print_Error
+    BRA     Print_OR
 
 Bit_Equal_1001            * nibble is 1001, the opcode is SUB
+    JSR     Get_Bit7_to_Bit6
+    CMP     #$3, D6
+    BEQ     Print_Error
     BRA Print_SUB
 
 Bit_Equal_1011            * nibble is 1011, the opcode is CMP
+    JSR     Get_Bit7_to_Bit6
+    CMP     #$3, D6
+    BEQ     Print_Error
+    JSR     Get_Bit8
+    CMP     #$1, D6
+    BEQ     Print_Error
     BRA Print_CMP
 
 Bit_Equal_1100            * nibble is 1100, the opcode is AND
+    JSR     Get_Bit7_to_Bit6
+    CMP     #$3, D6
+    BEQ     Print_Error
     BRA Print_AND
 
 Bit_Equal_1101            * nibble is 1101, the opcode is ADD
+    JSR     Get_Bit7_to_Bit6
+    CMP     #$3, D6
+    BEQ     Print_Error
     BRA Print_ADD
 
 Bit_Equal_1110            * nibble is 1110, the opcode is either LSLm, LSLr, ASRm, or ASRr
