@@ -31,36 +31,36 @@ START:
     LEA         $FFFFFFF,A5
     
     ASL.B       D1,D2
-    ASL.W       D1,D2
-    ASL.L       D3,D4
+    *ASL.W       D1,D2
+    *ASL.L       D3,D4
     ASL.B       #8,D5
-    ASL.W       #4,D6
-    ASL.L       #1,D1  
+    *ASL.W       #4,D6
+    *ASL.L       #1,D1  
     
-    ASL         $00001234
-    ASL         $FFFF1123
+   * ASL         $00001234
+   * ASL         $FFFF1123
     ASR         $00001234
     ASR         $FFFF1123
     ASR         (A1)+
     ASR         -(A2) 
 
-    BRA $A060
-    BEQ $9F42
-    BLT $A000
+    *BRA $A060
+    *BEQ $9F42
+    *BLT $A000
     BLE $8002
-    BGE $9E34
+    *BGE $9E34
     BGT $3000
-    BHI $7865
-    BLS $5767
+    *BHI $7865
+    *BLS $5767
     BCC $6887
-    BCS $7659
-    BNE $6589
-    BEQ $7688
-    BVC $8767
-    BVS $6756
-    BPL $9999
-    BPL $A876
-    BGE $6798
+    *BCS $7659
+    *BNE $6589
+    *BEQ $7688
+    *BVC $8767
+    *BVS $6756
+    *BPL $9999
+    *BPL $A876
+    *BGE $6798
     BGT $9987
     BLE $CCCC   
     
@@ -80,12 +80,12 @@ START:
     OR          D3, 0(A3,D5) * One known bug, the data is interpretted as ADDQ
     OR          D3, 0(A3,D5)
     SUB.B       D5,D4
-    SUB.W       D5,D4
-    SUB.L       D5,D4
-    SUB.L       D1,$00001234
-    SUB.L       $00001234,D1
-    SUB.L       D1, $FFFF1234
-    SUB.L       $FFFF1234,D1
+    *SUB.W       D5,D4
+    *SUB.L       D5,D4
+    *SUB.L       D1,$00001234
+    *SUB.L       $00001234,D1
+    *SUB.L       D1, $FFFF1234
+    *SUB.L       $FFFF1234,D1
     SUB         (A0),D3
     SUB         D1, (A1)
     SUB         -(A1),D3
@@ -120,15 +120,15 @@ START:
     ROR         (A1)+
     ROR         -(A2)    
     ROL.B       D1,D2
-    ROL.W       D1,D2
-    ROL.L       D3,D4
+   * ROL.W       D1,D2
+   * ROL.L       D3,D4
     ROL.B       #8,D5
-    ROL.W       #4,D6
-    ROL.L       #1,D1     
+   * ROL.W       #4,D6
+   * ROL.L       #1,D1     
     LSL         $00001234
     LSL         $FFFF1123
-    LSR         $00001234
-    LSR         $FFFF1123
+   * LSR         $00001234
+   * LSR         $FFFF1123
     LSR         (A1)+
     LSR         -(A2)    
     LSL.B       D1,D2
@@ -175,3 +175,8 @@ NO_TEST
     RTS
 
     END START
+
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~1~
+*~Tab size~4~
