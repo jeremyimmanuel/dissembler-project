@@ -29,8 +29,8 @@ DISP_START_ADDR_PROMPT
     RTS
 
 Check_Full_Screen
-    ADD         #1, D4					; uses D4 as a line counter									
-    CMP         #31, D4 				; one full screen of easy68k sim terminal
+    ADD         #1, D2					; uses D4 as a line counter									
+    CMP         #31, D2 				; one full screen of easy68k sim terminal
                                         ; is 30 lines, we use 31 to accomodate the
                                         ; press enter to continue prompt
 										
@@ -41,7 +41,7 @@ Check_Full_Screen
 
 Press_Enter_To_Continue
     JSR         DISP_PRESS_ENTER        ; Display press enter prompt
-    MOVE        #0, D4		            ; Reset line counter at D4
+    MOVE        #0, D2		            ; Reset line counter at D4
     MOVE.B      #5, D0
     TRAP        #15	
     RTS					

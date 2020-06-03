@@ -107,6 +107,7 @@ Bad_Input_Handler
     BRA         Invalid_Start_Addr_Handler	    * If it's 0 then beginning address was wrong. 
 
 Load_Addr
+    CLR.L       D2
     MOVE.L      START_ADDR_MEM_LOC, A2
     MOVE.L      END_ADDR_MEM_LOC, A3
     JSR         Loop                            ; parse_opcode.x68
