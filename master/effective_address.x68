@@ -19,7 +19,7 @@ Destination_Mode
     CMP.B   #$4, D6
     BEQ     Print_Indr_Minus_AnDr
     CMP.B   #$7, D6
-    BEQ     Print_MemAddr
+    BEQ     Print_MemAddr_Dr
     BNE     DISP_ERROR_MESSAGE
 
 Source_Mode
@@ -116,6 +116,15 @@ Print_MemAddr
     CMP.B   #$4, D6
     BEQ     Immedi_Data
 
+Print_MemAddr_Dr
+    JSR     Get_Bit11_to_Bit9
+    CMP.B   #$0, D6
+    BEQ     Mem_Word
+    CMP.B   #$1, D6
+    BEQ     Mem_Long
+    CMP.B   #$4, D6
+    BEQ     Immedi_Data
+
 Mem_Word
     JSR     DISP_Str_Hex_Symbol
     JSR     Immedi_Data_Word
@@ -124,7 +133,6 @@ Mem_Long
     JSR     DISP_Str_Hex_Symbol
     JSR     Immedi_Data_Long
     RTS
-
 Immedi_Data
     JSR     DISP_Str_Hashtag_Symbol
     JSR     DISP_Str_Hex_Symbol
