@@ -104,6 +104,7 @@ Bit_Equal_0110            * nibble is 0110, the opcode is either BCC, BGT, or BL
     BEQ     Print_BGT
     CMP.B   #$F, D6
     BEQ     Print_BLE
+    BNE     Print_Error
 
 Bit_Equal_1000            * nibble is 1000, the opcode is OR
     BRA Print_OR
@@ -415,7 +416,7 @@ Get_Bit13_to_Bit12
     MOVE.B  D7, D6
     MOVEM.L (SP)+, D7 
     RTS
-        
+
 Get_Bit15_to_Bit8
     MOVEM.L D7, -(SP)
     LSR.W   #8, D7
