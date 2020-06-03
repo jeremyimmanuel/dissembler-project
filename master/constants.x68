@@ -80,6 +80,7 @@ Banner       DC.B    '**********************************************************
 
 * Error message
 Str_ERROR                   DC.L 'Invalid Opcode', 0
+Str_ERROR_EA                DC.L 'Invalid Effective Address', 0
 Error_Message               DC.B 'Invalid Address exception, input was was not valid hex value', CR, LF, 0
 
 * Prompts

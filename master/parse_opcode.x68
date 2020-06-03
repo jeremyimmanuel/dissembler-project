@@ -342,6 +342,10 @@ Print_Error
     JSR     DISP_ERROR_MESSAGE
     JSR     DISP_NEW_LINE
     JMP     Loop
+Print_Error_EA
+    JSR     DISP_ERROR_MESSAGE_EA
+    JSR     DISP_NEW_LINE
+    JMP     Loop    
 Print_Size_Byte
     JSR     DISP_STR_BYTE
     RTS

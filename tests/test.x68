@@ -80,12 +80,12 @@ START:
     OR          D3, 0(A3,D5) * One known bug, the data is interpretted as ADDQ
     OR          D3, 0(A3,D5)
     SUB.B       D5,D4
-    *SUB.W       D5,D4
-    *SUB.L       D5,D4
-    *SUB.L       D1,$00001234
-    *SUB.L       $00001234,D1
-    *SUB.L       D1, $FFFF1234
-    *SUB.L       $FFFF1234,D1
+    SUB.W       D5,D4
+    SUB.L       D5,D4
+    SUB.L       D1,$00001234
+    SUB.L       $00001234,D1
+    SUB.L       D1, $FFFF1234
+    SUB.L       $FFFF1234,D1
     SUB         (A0),D3
     SUB         D1, (A1)
     SUB         -(A1),D3
@@ -98,16 +98,16 @@ START:
     SIMHALT
     EOR.B #5,D2
     
-    MOVEM D1/D4-D5/D7/A0/A2/A5-A6,-(SP)
-    MOVEM (SP)+,D1/D4-D5/D7/A0/A2/A5-A6
-    MOVEM D0-D7/A0-A7,-(SP)
-    MOVEM (SP)+,D0-D7/A0-A7
+    MOVEM       D1/D4-D5/D7/A0/A2/A5-A6,-(SP)
+    MOVEM       (SP)+,D1/D4-D5/D7/A0/A2/A5-A6
+    MOVEM       D0-D7/A0-A7,-(SP)
+    MOVEM       (SP)+,D0-D7/A0-A7
     
-    MOVEM $4032,A0-A4/A6
-    MOVEM D1-D4,($56C4)
+    MOVEM       $4032,A0-A4/A6
+    MOVEM       D1-D4,($56C4)
     
-    MOVEM ($A000),D0
-    MOVEM D0,($A000)
+    MOVEM       ($A000),D0
+    MOVEM       D0,($A000)
 
     DIVU        #45,D1
     DIVU        $00001234,D7

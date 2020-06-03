@@ -20,7 +20,7 @@ Destination_Mode
     BEQ     Print_Indr_Minus_AnDr
     CMP.B   #$7, D6
     BEQ     Print_MemAddr_Dr
-    BNE     DISP_ERROR_MESSAGE
+    BNE     Print_Error_EA
 
 Source_Mode
     JSR     Get_Bit5_to_Bit3
@@ -36,7 +36,7 @@ Source_Mode
     BEQ     Print_Indr_Minus_AnSr
     CMP.B   #$7, D6
     BEQ     Print_MemAddr
-    BNE     DISP_ERROR_MESSAGE
+    BNE     Print_Error_EA
 
 Print_DnDr
     JSR     DISP_Str_Data_Reg
@@ -187,7 +187,7 @@ Check_Opmode
     BEQ     ea_Dn
     CMP.B   #$1, D6
     BEQ     Dn_ea
-    BNE     Print_Error
+    BNE     Print_Error_EA
 
 ea_Dn
     JSR     Source_Mode
@@ -252,7 +252,7 @@ Displacement_16_Bit
     RTS
 
 Displacement_32_Bit
-    JSR     Print_Error
+    JSR     Print_Error_EA
     RTS
 
 Check_Count_Or_Register
@@ -261,7 +261,7 @@ Check_Count_Or_Register
     BEQ     Shift_Count
     CMP.B   #$1, D6
     BEQ     Shift_Register
-    BNE     Print_Error
+    BNE     Print_Error_EA
 
 Shift_Count
     JSR     DISP_Str_Hashtag_Symbol
@@ -281,7 +281,7 @@ Transfer_Direction
     BEQ     Reg_To_Mem
     CMP.B   #$1, D6
     BEQ     Mem_to_Reg
-    BNE     Print_Error
+    BNE     Print_Error_EA
 
 * example: MOVEM.W   A1-A7, (A1)+
 Reg_To_Mem
@@ -292,7 +292,7 @@ Reg_To_Mem
     BEQ     Print_Indr_Minus_Movem_RM
     CMP.B   #$7, D6
     BEQ     Print_MemAddr_RM
-    BNE     DISP_ERROR_MESSAGE  
+    BNE     Print_Error_EA  
 Print_Indr_Movem_RM
     MOVE.W  (A2), D7
     JSR     Postincrement_Movem
@@ -324,7 +324,7 @@ Print_MemAddr_RM
     BEQ     Mem_Word_RM
     CMP.B   #$1, D6
     BEQ     Mem_Long_RM
-    BNE     Print_Error
+    BNE     Print_Error_EA
 Mem_Word_RM
     MOVE.W  (A2)+, D7
     JSR     Postincrement_Movem
@@ -351,7 +351,7 @@ Mem_to_Reg
     BEQ     Print_Indr_Plus_Movem_MR
     CMP.B   #$7, D6
     BEQ     Print_MemAddr_MR
-    BNE     DISP_ERROR_MESSAGE  
+    BNE     Print_Error_EA  
 Print_Indr_Movem_MR
     JSR     DISP_Str_Open_Brack_Symbol
     JSR     DISP_Str_Addr_Reg
@@ -379,7 +379,7 @@ Print_MemAddr_MR
     BEQ     Mem_Word_MR
     CMP.B   #$1, D6
     BEQ     Mem_Long_MR
-    BNE     Print_Error
+    BNE     Print_Error_EA
 Mem_Word_MR
     JSR     DISP_Str_Hex_Symbol
     ADDA    #$2, A2
