@@ -1,7 +1,7 @@
 *-----------------------------------------------------------
 * Title      : get_input.x68
 * Written by : Jeremy, Angie, Jun
-* Date       : June 8th, 2020
+* Date       : May 26th, 2020
 * Description: Handles prompting user to input starting
 *               and ending addresses
 *               Will jump to ascii_hex.68

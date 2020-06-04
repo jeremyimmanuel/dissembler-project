@@ -1,7 +1,7 @@
 *-----------------------------------------------------------
-* Title      : ascii_hex.68
+* Title      : ascii_hex.x68
 * Written by : Jeremy Tandjung, Angie Tserenjav, Jun Zhen
-* Date       : 05/16/2020
+* Date       : May 16th, 2020
 * Description: This file handles converting ascii values from 
 *               user input to hex so that easy68k can use it 
 *-----------------------------------------------------------
@@ -102,9 +102,9 @@ Invalid_End_Addr_Handler                        ; Invalid_End_Addr_Handler
 
 
 Bad_Input_Handler
-    CMP         #1, D2				            ; if toggle is D2 
+    CMP         #1, D2				            ; if toggle at D2 is 1 then Ending address error
     BEQ         Invalid_End_Addr_Handler 
-    BRA         Invalid_Start_Addr_Handler	    * If it's 0 then beginning address was wrong. 
+    BRA         Invalid_Start_Addr_Handler	    ; else starting address error
 
 Load_Addr
     CLR.L       D2

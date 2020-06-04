@@ -13,7 +13,7 @@ A1_COPY_TWO_MEM_LOC         EQU    $600     ; store copy of start address to avo
     
     ORG $1000
 START:
-    *JSR DISP_BANNER
+    JSR DISP_BANNER
     INCLUDE 'get_input.x68' ; get user input for starting address and ending address
     INCLUDE 'ascii_hex.x68' ; convert user input from ASCII values to hex values
     
@@ -30,7 +30,3 @@ START:
 EXIT    MOVE.B      #9, D0 
         TRAP        #15
     END START
-*~Font name~Courier New~
-*~Font size~10~
-*~Tab type~1~
-*~Tab size~4~
