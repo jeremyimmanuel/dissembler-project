@@ -1,5 +1,5 @@
 *-----------------------------------------------------------
-* Title      : constants.x68
+* Title      : displays.x68
 * Written by : Jeremy, Angie, Jun
 * Date       : June 8th, 2020
 * Description: Stores every display/print statements used 
@@ -57,7 +57,7 @@ DISP_ADDR_LOC
     RTS
 
 DISP_INVALID_ADDRESS_ERROR
-    LEA         error_message, A1                ; Load error message
+    LEA         Invalid_Address_Message, A1                ; Load error message
     JSR         TRAP13
     RTS
 

@@ -84,18 +84,14 @@ Validate_End_Addr
 
 Invalid_Start_Addr_Handler                      ; HANDLING_INVALID_START_ADDR
     MOVEA.L     #0, A1                          ; Clear A1
-    LEA         Error_Message, A1               ; Load error message
-    MOVE.B      #13, D0                         ; Trap task #13
-    TRAP        #15	
+    JSR         DISP_INVALID_ADDRESS_ERROR
     CLR         D3                              ; Clear D3
     BRA         Get_Start_Addr                  ; Ask for starting address again
   
 
 Invalid_End_Addr_Handler                        ; Invalid_End_Addr_Handler
     MOVEA.L     #0, A1                          ; Clear A1
-    LEA         Error_Message, A1	            
-    MOVE.B      #13, D0				            
-    TRAP        #15	             
+    JSR         DISP_INVALID_ADDRESS_ERROR             
     
     CLR         D3	
     BRA         Get_End_Addr
