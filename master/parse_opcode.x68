@@ -340,6 +340,11 @@ Print_ASRr
     RTS
 Print_Error
     JSR     DISP_ERROR_MESSAGE
+    JSR     DISP_STR_SPACE
+    JSR     DISP_Str_Hex_Symbol
+    MOVE.W  D7, D5
+    MOVE.W  D5, CURR_NIBBLES_MEM_LOC
+    JSR     HEX_2_ASCII
     JSR     DISP_NEW_LINE
     JMP     Loop
 Print_Error_EA
