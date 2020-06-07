@@ -25,7 +25,8 @@ This section talks about program instructions
 ### Starting the program
 
 To run this program, user only needs to open **main.x68** as everything else is included in the file.
-After running **main.x68** user should load desired .S68 data to the simulator.
+After running **main.x68** user should load desired .S68 data to the simulator. We have provided our own test file, grader should run the **test.x68** file to generate **test.S68** to be used as data for our program.
+Our own test file's starting address should be **$9000** and ending address should be **$91C2**
 
 ### Inputting Starting and Ending Addresses
 
@@ -36,6 +37,9 @@ Some contraints for starting address and ending address:
 * Both addresses must be an even address
 * Starting address has to be less than the ending address
 * Only capilal hex letters (A - F) and numbers (0 - 9) are accepted
+
+If the input doesn't follow one of the constraints, the program will give
+an invalid address exception and re-prompt the user.
 
 ### Printing >30 Lines of output
 

@@ -51,6 +51,7 @@ Search_Opcode
     BEQ     Bit_Equal_1110 * LSLm, LSLr, ASRm,ASRr
     BNE     Print_Error
 
+* Subroutine for SUBI, ADDI, ORI, and CMPI
 Bit_Equal_0000
     JSR     Get_Bit11_to_Bit9    
     CMP.B   #$0, D6
@@ -65,12 +66,14 @@ Bit_Equal_0000
     BEQ     Print_CMP
     BNE     Print_Error
 
+* Subroutine for MOVE and MOVEA
 Bit_Equal_00XX          * two bit is 00~~, the opcode is either MOVE or MOVEA
     JSR     Get_Bit8_to_Bit6
     CMP.B   #$1, D6       * if the destination mode is 1 then it is MOVEA
     BEQ     Print_MOVEA
     BNE     Print_MOVE
 
+* Subroutine for MOVEM, LEA, or JSR
 Bit_Equal_0100            * nibble is 0100, the opcode is either MOVEM, LEA, or JSR
     JSR     Get_Bit11_to_Bit6
     CMP.W   #$3A, D6
@@ -85,12 +88,14 @@ Bit_Equal_0100            * nibble is 0100, the opcode is either MOVEM, LEA, or 
     BEQ     Confirm_Movem
     BNE     Print_Error
 
+* Subroutine for checking if the opcode is actually MOVEM
 Confirm_Movem
     JSR     Get_Bit5_to_Bit3
     CMP.B   #$0, D6
     BEQ     Print_Error
     BNE     Print_MOVEM
 
+* Subroutine for BCC, BGT, or BLE
 Bit_Equal_0110            * nibble is 0110, the opcode is either BCC, BGT, or BLE
     MOVEM.L D7, -(SP)
     LSL.W   #4, D7
@@ -106,18 +111,21 @@ Bit_Equal_0110            * nibble is 0110, the opcode is either BCC, BGT, or BL
     BEQ     Print_BLE
     BNE     Print_Error
 
+* Subroutine for OR
 Bit_Equal_1000            * nibble is 1000, the opcode is OR
     JSR     Get_Bit7_to_Bit6
     CMP     #$3, D6
     BEQ     Print_Error
     BRA     Print_OR
 
+* Subroutine for SUB
 Bit_Equal_1001            * nibble is 1001, the opcode is SUB
     JSR     Get_Bit7_to_Bit6
     CMP     #$3, D6
     BEQ     Print_Error
     BRA Print_SUB
 
+* Subroutine for CMP
 Bit_Equal_1011            * nibble is 1011, the opcode is CMP
     JSR     Get_Bit7_to_Bit6
     CMP     #$3, D6
@@ -127,18 +135,21 @@ Bit_Equal_1011            * nibble is 1011, the opcode is CMP
     BEQ     Print_Error
     BRA Print_CMP
 
+* Subroutine for AND
 Bit_Equal_1100            * nibble is 1100, the opcode is AND
     JSR     Get_Bit7_to_Bit6
     CMP     #$3, D6
     BEQ     Print_Error
     BRA Print_AND
 
+* Subroutine for ADD
 Bit_Equal_1101            * nibble is 1101, the opcode is ADD
     JSR     Get_Bit7_to_Bit6
     CMP     #$3, D6
     BEQ     Print_Error
     BRA Print_ADD
 
+* Subroutine for LSLm, LSLr, ASRm, or ASRr
 Bit_Equal_1110            * nibble is 1110, the opcode is either LSLm, LSLr, ASRm, or ASRr
     JSR     Get_Bit11_to_Bit6
     CMP.B   #$0F,D6
@@ -156,18 +167,21 @@ Bit_Equal_1110            * nibble is 1110, the opcode is either LSLm, LSLr, ASR
     BEQ     Check_Right_Only
     BNE     Print_Error
 
+* Subroutine if it is left shift only
 Check_Left_Only
     JSR     Get_Bit8
     CMP.B   #$1, D6
     BEQ     Print_LSLr
     BNE     Print_Error
 
+* Subroutine if it is left right only
 Check_Right_Only
     JSR     Get_Bit8
     CMP.B   #$0, D6
     BEQ     Print_ASRr
     BNE     Print_Error
 
+* Subroutine for getting the size 
 Get_Size_For_Move_Movea   * Now check the size (bit-13 to bit-12)
     JSR     Get_Bit13_to_Bit12
     CMP.B   #$1, D6       * if equal to 3 that mean its Byte because 01 is 1 in hex
@@ -212,6 +226,7 @@ Get_Size_For_MOVEM
     BEQ     Print_Size_Long
     BNE     Print_Error
 
+* Subroutine for printing 
 Print_MOVE
     JSR     DISP_STR_MOVE
     JSR     Get_Size_For_Move_Movea
@@ -361,6 +376,7 @@ Print_Size_Long
     JSR     DISP_STR_LONG
     RTS
 
+* Subroutine for getting the bits
 Get_First_Nibble
     MOVEM.L D7, -(SP)
     LSR.W   #8, D7

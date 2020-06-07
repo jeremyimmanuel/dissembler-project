@@ -4,8 +4,8 @@
 * Date       : 05/16/2020
 * Description: 
 *-----------------------------------------------------------
-* MOVE_EA
-    
+
+* Subroutine for getting the effective address 
 Destination_Mode
     JSR     Get_Bit8_to_Bit6
     CMP.B   #$0, D6
@@ -38,6 +38,7 @@ Source_Mode
     BEQ     Print_MemAddr
     BNE     Print_Error_EA
 
+* Subroutine for printing out to console
 Print_DnDr
     JSR     DISP_Str_Data_Reg
     JSR     Find_DR
@@ -99,14 +100,17 @@ Print_Indr_Minus_AnSr
     JSR     DISP_Str_Close_Brack_Symbol
     RTS   
 
+* Subroutine for finding the destination data register
 Find_DR
     JSR     Get_Bit11_to_Bit9
     JMP     Print_Num
 
+* Subroutine for finding the source data register
 Find_SR
     JSR     Get_Bit2_to_Bit0
     JMP     Print_Num
 
+* Subroutine for printing out the memory address
 Print_MemAddr
     JSR     Get_Bit2_to_Bit0
     CMP.B   #$0, D6
@@ -125,6 +129,7 @@ Print_MemAddr_Dr
     CMP.B   #$4, D6
     BEQ     Immedi_Data
 
+* Subroutine for printing out the immediate
 Mem_Word
     JSR     DISP_Str_Hex_Symbol
     JSR     Immedi_Data_Word
@@ -158,7 +163,8 @@ Size_Move
     BEQ     Immedi_Data_Word
     CMP.B   #$2, D6       * if equal to 3 that mean its Long because 10 is 2 in hex
     BEQ     Immedi_Data_Long
-    
+
+* Subroutine for finding immediate data for ADD, SUB, CMP, OR 
 Immedi_Data_Byte    
     MOVE.W      (A2)+, D5
     MOVE.W      D5, CURR_NIBBLES_MEM_LOC
@@ -189,6 +195,7 @@ Check_Opmode
     BEQ     Dn_ea
     BNE     Print_Error_EA
 
+* Subroutine to determine if <ea> to Dn or Dn to <ea>
 ea_Dn
     JSR     Source_Mode
     JSR     DISP_STR_COMMA
@@ -220,7 +227,7 @@ Print_Arthm_Immedi
     CMP.B   #2, D6
     BEQ     Immedi_Data_Long
 
-
+* Subroutine for finding the destination address for Bcc
 Check_Displacement
     CMP.B   #$00, D6
     BEQ     Displacement_16_Bit
@@ -283,6 +290,7 @@ Transfer_Direction
     BEQ     Mem_to_Reg
     BNE     Print_Error_EA
 
+* Subroutine for printing out the register mask
 * example: MOVEM.W   A1-A7, (A1)+
 Reg_To_Mem
     JSR     Get_Bit5_to_Bit3
@@ -547,6 +555,7 @@ Is_First_An_Reg
     CLR.B   D1
     RTS
 
+* Subroutine for printing numbers
 Print_Num
     CMP.B   #$0, D6
     BEQ     Print_0
